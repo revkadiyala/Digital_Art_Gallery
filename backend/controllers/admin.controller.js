@@ -1,0 +1,263 @@
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const config = require("../config/auth.config");
+const { Mongoose } = require('mongoose');
+const admin = require('../models/admin.model');
+const user = require("../models/user.model");
+const multer = require('multer');
+const art = require("../models/art.model")
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, './uploads'); // Set the folder where files will be uploaded
+    },
+    filename: (req, file, cb) => {
+      cb(null, Date.now() + '-' + file.originalname); // Set the file name
+    },
+  });
+  
+exports.upload = multer({ storage }); 
+
+function generateToken(userid) {
+    return jwt.sign({ id: userid }, config.secret, { expiresIn: 15552000 });
+}
+
+exports.createAdmin = async (req, res) => {
+    try {
+        const { admin_Name, admin_Email,  password } = req.body;
+
+        // Validating email, full name, mobile number, password, and confirm password
+        const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        // const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s)/;
+
+        if (!admin_Email) {
+            return res.status(400).send({ message: "Email is required", status: 400 });
+        } else if (!admin_Email.match(emailRegex)) {
+            return res.status(400).send({ message: "Please provide a valid Email address", status: 400 });
+        }
+
+        if (!admin_Name) {
+            return res.status(400).send({ message: "admin  name is required", status: 400 });
+        } 
+
+        
+
+        if (!password) {
+            return res.status(400).send({ message: "Password is required", status: 400 });
+        } 
+
+        
+
+        const checkEmail = await admin.findOne({ admin_Email }).lean();
+        if (checkEmail) {
+            return res.status(409).send({ message: 'Email already exists', status: 409 });
+        }
+
+
+        const data = await admin.create({
+            admin_Name:admin_Name,
+            admin_Email: admin_Email.toLowerCase(),
+            password: bcrypt.hashSync(password,)
+        });
+
+        return res.status(200).send({ data, message: "Congratulations! Your account has been created successfully!", status: 200 });
+
+    } catch (error) {
+        return res.status(500).send({ message: error.message || 'Some error occurred while creating an account', status: 500 });
+    }
+};
+
+//admin login
+exports.adminLogin = (req, res) => {
+    // Request validation
+    if (!req.body || !req.body.admin_Email || !req.body.password) {
+        return res.status(400).send({message: 'Please provide both admin email and password.',status: 400});
+    }
+
+    const admin_Email = req.body.admin_Email.toLowerCase();
+
+    // Check, get, and verify login data from the database
+    admin.findOne({ "admin_Email": admin_Email, deleteFlag: false })
+        .then(foundAdmin => {
+            if (!foundAdmin) {
+                return res.status(404).send({ message: 'Email does not exist.', status: 404 });
+            }
+
+            console.log(foundAdmin)
+
+            const passwordIsValid = bcrypt.compareSync(req.body.password, foundAdmin.password);
+            if (!passwordIsValid) {
+                return res.status(401).send({message: "Invalid password!.",status: 401});
+            }
+
+            const token = generateToken(foundAdmin._id);
+            return res.status(200).send({ accessToken: token, data: foundAdmin, status: 200 });
+        })
+        .catch(err => {
+            res.status(500).send({ message: 'Internal server error.', status: 500 });
+        });
+};
+
+exports.getAllUsers = async (req, res) => {
+    try {
+        // Fetch all users except those marked as deleted
+        const users = await user.find({ deleteFlag: false }).select('-password'); // Exclude the password field
+        const totalCount = await user.countDocuments({ deleteFlag: false }); // Count the total users
+
+        return res.status(200).send({ 
+            data: users, 
+            totalCount, // Include the total count
+            message: "Users fetched successfully", 
+            status: 200 
+        });
+    } catch (error) {
+        return res.status(500).send({ 
+            message: error.message || 'An error occurred while fetching users', 
+            status: 500 
+        });
+    }
+};
+
+// Edit user data by admin
+exports.editUser = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const { user_FullName, user_Email, country_code, mobile_no } = req.body;
+
+        // Validate request data
+        if (!user_FullName || !user_Email || !country_code || !mobile_no) {
+            return res.status(400).send({ message: 'All fields are required', status: 400 });
+        }
+
+        const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        if (!user_Email.match(emailRegex)) {
+            return res.status(400).send({ message: 'Please provide a valid email address', status: 400 });
+        }
+
+        const existingUser = await user.findOne({ _id: userId }).lean();
+        if (!existingUser) {
+            return res.status(404).send({ message: 'User not found', status: 404 });
+        }
+
+        const updatedUser = await user.findOneAndUpdate(
+            { _id: userId },
+            { $set: { user_FullName, user_Email, country_code, mobile_no } },
+            { new: true }
+        );
+
+        return res.status(200).send({ data: updatedUser, message: 'User updated successfully', status: 200 });
+    } catch (error) {
+        return res.status(500).send({ message: error.message || 'Error updating user', status: 500 });
+    }
+};
+
+// Delete user by admin
+exports.deleteUser = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+
+        const existingUser = await user.findOne({ _id: userId }).lean();
+        if (!existingUser) {
+            return res.status(404).send({ message: 'User not found', status: 404 });
+        }
+
+        await user.findOneAndUpdate(
+            { _id: userId },
+            { $set: { deleteFlag: true } }
+        );
+
+        return res.status(200).send({ message: 'User deleted successfully', status: 200 });
+    } catch (error) {
+        return res.status(500).send({ message: error.message || 'Error deleting user', status: 500 });
+    }
+};
+
+// Add Art  
+exports.addArt = async (req, res) => {
+    try {
+        const { artist_name, art_name, price, description } = req.body;
+        const photos = req.files?.photos ? req.files.photos.map(file => file.path) : [];
+
+        // Validate required fields
+        if (!artist_name || !art_name || !price || !description || photos.length === 0) {
+            return res.status(400).json({ error: 'All fields are required, including at least one photo' });
+        }
+
+        const newArt = new art({
+            artist_name,
+            art_name,
+            description,
+            dateAdded: new Date(),
+            photos,
+            price
+        });
+
+        // Save the art to the database
+        const savedArt = await newArt.save();
+        res.status(201).json({ message: 'Art added successfully', art: savedArt });
+
+    } catch (error) {
+        console.error('Error adding art', error);
+        res.status(500).json({ error: 'Failed to add art' });
+    }
+};
+
+//  Get Art
+exports.getArt = async (req, res) => {
+    try {
+        const arts = await art.find();
+        if (arts.length === 0) {
+            return res.status(404).json({ message: 'No art found' });
+        }
+        res.status(200).json({ message: 'Arts retrieved successfully', arts });
+    } catch (error) {
+        console.error('Error fetching arts', error);
+        res.status(500).json({ error: 'Failed to retrieve arts' });
+    }
+};
+
+
+// Update Art
+
+exports.updateArt = async (req, res) => {
+    try {
+        const { artId } = req.params;
+        const { artist_name, art_name, price, description } = req.body;
+        const photos = req.files?.photos ? req.files.photos.map(file => file.path) : [];
+
+        // Find existing art
+        const existingArt = await art.findById(artId);
+        if (!existingArt) {
+            return res.status(404).json({ error: 'Art not found' });
+        }
+
+        // Update fields if provided
+        if (artist_name) existingArt.artist_name = artist_name;
+        if (art_name) existingArt.art_name = art_name;
+        if (description) existingArt.description = description;
+        if (price) existingArt.price = price;
+        if (photos.length > 0) existingArt.photos = photos;
+
+        // Save the updated art
+        const updatedArt = await existingArt.save();
+        res.status(200).json({ message: 'Art updated successfully', art: updatedArt });
+    } catch (error) {
+        console.error('Error updating art', error);
+        res.status(500).json({ error: 'Failed to update art' });
+    }
+};
+
+exports.deleteArt = async (req, res) => {
+    try {
+        const { artId } = req.params;
+        const deletedArt = await art.findByIdAndDelete(artId);
+
+        if (!deletedArt) {
+            return res.status(404).json({ message: 'Art not found' });
+        }
+
+        res.status(200).json({ message: 'Art deleted successfully', art: deletedArt });
+    } catch (error) {
+        console.error('Error deleting art', error);
+        res.status(500).json({ error: 'Failed to delete art' });
+    }
+};
