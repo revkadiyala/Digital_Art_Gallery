@@ -159,6 +159,15 @@ export default function Login() {
                             onChange={(e) => setArtistEmail(e.target.value)}
                           />
                         </div>
+                  <div class="mb-4">
+                          <input
+                            type="number"
+                            class="form-control"
+                            placeholder="Age"
+                            required
+                            onChange={(e) => setArtistAge(e.target.value)}
+                          />
+                        </div>
 
                         <div class="mb-4 position-relative">
                           <input
