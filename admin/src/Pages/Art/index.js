@@ -23,7 +23,8 @@ import {
 import Swal from "sweetalert2";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import { Link } from "react-router-dom";
 const style = {
   position: "absolute",
   top: "50%",
@@ -51,12 +52,29 @@ export default function Art() {
   const handleFileChange = (e) => {
     setPhotos(Array.from(e.target.files)); // Convert FileList to an array
   };
+
+  // ******** get category api ********
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  console.log("select category is --->", selectedCategory);
+  useEffect(() => {
+    getCatgory();
+  }, []);
+  const getCatgory = async () => {
+    const res = await getApihandler("/getAllCategory");
+    console.log("get category api response is ---->", res);
+    if (res.message === "Categories get successfully") {
+      setCategories(res.data);
+    }
+  };
   const addArt = async () => {
     const formData = new FormData();
     formData.append("artist_name", artistName);
     formData.append("art_name", artName);
     formData.append("price", price);
     formData.append("description", description);
+    formData.append("category", selectedCategory);
+
     photos.forEach((photo) => {
       formData.append("photos", photo); // Append each file correctly
     });
@@ -67,6 +85,7 @@ export default function Art() {
         icon: "success",
         text: "Art  added successfully!",
       });
+      setOpen(false);
       getArt();
     }
   };
@@ -120,6 +139,8 @@ export default function Art() {
     formData.append("art_name", artName);
     formData.append("price", price);
     formData.append("description", description);
+    formData.append("category", selectedCategory);
+
     photos.forEach((photo) => {
       formData.append("photos", photo); // Append each file correctly
     });
@@ -130,6 +151,7 @@ export default function Art() {
         icon: "success",
         text: "Art  Updated successfully!",
       });
+      setOpen1(false);
       getArt();
     }
   };
@@ -184,6 +206,26 @@ export default function Art() {
           <div className="mt-4">
             <input type="file" multiple onChange={handleFileChange} />
           </div>
+          <div className="mt-4">
+            <label>Select Category</label>
+            <div className="mt-3">
+              <select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="form-control"
+              >
+                <option value="">Select a category</option>
+                {categories.map((category) => (
+                  <option
+                    key={category.category_name}
+                    value={category.category_name}
+                  >
+                    {category.category_name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
           <Button variant="contained" className="mt-3" onClick={addArt}>
             Add Art
           </Button>
@@ -197,6 +239,7 @@ export default function Art() {
               <TableCell>Artist Name</TableCell>
               <TableCell>Price</TableCell>
               <TableCell>Description</TableCell>
+              <TableCell>Category</TableCell>
               <TableCell>Photos</TableCell>
               <TableCell>Action</TableCell>
             </TableRow>
@@ -208,11 +251,12 @@ export default function Art() {
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
-                  {art.art_name}
+                  {art.art_name || "N/A"}
                 </TableCell>
-                <TableCell>{art.artist_name}</TableCell>
-                <TableCell>{art.price}</TableCell>
-                <TableCell>{art.description}</TableCell>
+                <TableCell>{art.artist_name || "N/A"}</TableCell>
+                <TableCell>{art.price || "N/A"}</TableCell>
+                <TableCell>{art.description || "N/A"}</TableCell>
+                <TableCell>{art.category || "N/A"} </TableCell>
                 <TableCell>
                   {art.photos && art.photos.length > 0 && (
                     <img
@@ -221,7 +265,7 @@ export default function Art() {
                         "/"
                       )}`}
                       alt={art.art_name}
-                      width="30%"
+                      width="100px"
                     />
                   )}
                 </TableCell>
@@ -253,6 +297,9 @@ export default function Art() {
                       setOpen1(true);
                     }}
                   />
+                  <Link to={`/artdetail/${art._id}`} style={{ color: "black" }}>
+                    <VisibilityIcon />
+                  </Link>
                 </TableCell>
               </TableRow>
             ))}
@@ -304,6 +351,26 @@ export default function Art() {
           />
           <div className="mt-4">
             <input type="file" multiple onChange={handleFileChange} />
+          </div>
+          <div className="mt-4">
+            <label>Select Category</label>
+            <div className="mt-3">
+              <select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="form-control"
+              >
+                <option value="">Select a category</option>
+                {categories.map((category) => (
+                  <option
+                    key={category.category_name}
+                    value={category.category_name}
+                  >
+                    {category.category_name}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
           <Button variant="contained" className="mt-3" onClick={updateArt}>
             Update Art

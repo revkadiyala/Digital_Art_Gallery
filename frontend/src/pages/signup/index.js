@@ -1225,7 +1225,7 @@ const countryCodeList = [
 export default function Signup() {
   const navigate = useNavigate();
   const [name, setName] = useState("");
-  //console.log("name is --->", name);
+  // console.log("name is --->", name);
 
   const [email, setEmail] = useState("");
   // console.log("email is --->", email);

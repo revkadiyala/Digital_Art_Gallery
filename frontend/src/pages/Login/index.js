@@ -45,7 +45,7 @@ export default function Login() {
       user_Email: artistemail,
       password: artistpassword,
     };
-    //console.log("artist login api response is ---->", data);
+    // console.log("artist login api response is ---->", data);
     const res = await postApihandler("/artistLogin", data);
     console.log("login api response is ---->", res);
     if (res.status === 200) {
@@ -159,6 +159,7 @@ export default function Login() {
                             onChange={(e) => setArtistEmail(e.target.value)}
                           />
                         </div>
+
                         <div class="mb-4 position-relative">
                           <input
                             type="password"

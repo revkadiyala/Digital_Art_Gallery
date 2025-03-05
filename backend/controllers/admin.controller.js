@@ -5,7 +5,9 @@ const { Mongoose } = require('mongoose');
 const admin = require('../models/admin.model');
 const user = require("../models/user.model");
 const multer = require('multer');
-const art = require("../models/art.model")
+const art = require("../models/art.model");
+const category = require("../models/category.model");
+
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
       cb(null, './uploads'); // Set the folder where files will be uploaded
@@ -174,11 +176,11 @@ exports.deleteUser = async (req, res) => {
 // Add Art  
 exports.addArt = async (req, res) => {
     try {
-        const { artist_name, art_name, price, description } = req.body;
+        const { artist_name, art_name, price,category, description } = req.body;
         const photos = req.files?.photos ? req.files.photos.map(file => file.path) : [];
 
         // Validate required fields
-        if (!artist_name || !art_name || !price || !description || photos.length === 0) {
+        if (!artist_name || !art_name || !price || photos.length === 0 || !category) {
             return res.status(400).json({ error: 'All fields are required, including at least one photo' });
         }
 
@@ -188,6 +190,7 @@ exports.addArt = async (req, res) => {
             description,
             dateAdded: new Date(),
             photos,
+            category,
             price
         });
 
@@ -215,13 +218,29 @@ exports.getArt = async (req, res) => {
     }
 };
 
+//  Get Art by Id
+exports.getArtById = async (req, res) => {
+    try {
+        const { id } = req.params; // Get ID from request parameters
+        const artdata = await art.findById(id); // Find art by ID
+
+        if (!artdata) {
+            return res.status(404).json({ message: 'Art not found' });
+        }
+
+        res.status(200).json({ message: 'Success', data:artdata });
+    } catch (error) {
+        console.error('Error get art', error);
+        res.status(500).json({ error: 'Failed to get art' });
+    }
+};
+
 
 // Update Art
-
 exports.updateArt = async (req, res) => {
     try {
         const { artId } = req.params;
-        const { artist_name, art_name, price, description } = req.body;
+        const { artist_name, art_name, price,category, description } = req.body;
         const photos = req.files?.photos ? req.files.photos.map(file => file.path) : [];
 
         // Find existing art
@@ -232,6 +251,7 @@ exports.updateArt = async (req, res) => {
 
         // Update fields if provided
         if (artist_name) existingArt.artist_name = artist_name;
+        if (category) existingArt.category = category;
         if (art_name) existingArt.art_name = art_name;
         if (description) existingArt.description = description;
         if (price) existingArt.price = price;
@@ -246,6 +266,7 @@ exports.updateArt = async (req, res) => {
     }
 };
 
+// delete art
 exports.deleteArt = async (req, res) => {
     try {
         const { artId } = req.params;
@@ -261,3 +282,84 @@ exports.deleteArt = async (req, res) => {
         res.status(500).json({ error: 'Failed to delete art' });
     }
 };
+
+
+// add category
+
+exports.addCategory = async(req, res) => {
+
+    const {category_name} = req.body;
+    if (!category_name) {
+        return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    const newCategory = new category({
+        category_name,
+    });
+      // Save the category to the database
+       const savedCategory = await newCategory.save();
+       res.status(201).json({ message: 'Category added successfully', data: savedCategory });
+}
+
+// Upadet category
+
+exports.updateCategory = async (req, res) => {
+    const { id } = req.params; // Get category ID from request params
+    const { category_name } = req.body; // Get new category name from request body
+
+    if (!category_name) {
+        return res.status(400).json({ error: 'Category name is required' });
+    }
+
+    try {
+        // Find and update the category by ID
+        const updatedCategory = await category.findByIdAndUpdate(
+            id,
+            { category_name },
+            { new: true, runValidators: true } // Return updated document and validate inputs
+        );
+
+        if (!updatedCategory) {
+            return res.status(404).json({ error: 'Category not found' });
+        }
+
+        res.status(200).json({ message: 'Category updated successfully', data: updatedCategory });
+    } catch (error) {
+        res.status(500).json({ error: 'Server error', details: error.message });
+    }
+};
+
+
+//  Delete category
+
+exports.deleteCategory = async (req, res) => {
+    const { id } = req.params; // Get category ID from request params
+
+    try {
+        // Find and delete the category by ID
+        const deletedCategory = await category.findByIdAndDelete(id);
+
+        if (!deletedCategory) {
+            return res.status(404).json({ error: 'Category not found' });
+        }
+
+        res.status(200).json({ message: 'Category deleted successfully', data: deletedCategory });
+    } catch (error) {
+        res.status(500).json({ error: 'Server error', details: error.message });
+    }
+};
+
+
+// Get category
+
+exports.getCategories = async (req, res) => {
+    try {
+        // Fetch all categories from the database
+        const categories = await category.find();
+
+        res.status(200).json({ message: 'Categories get successfully', data: categories });
+    } catch (error) {
+        res.status(500).json({ error: 'Server error', details: error.message });
+    }
+};
+

@@ -20,7 +20,8 @@ import PeopleIcon from "@mui/icons-material/People";
 import PrecisionManufacturingOutlinedIcon from "@mui/icons-material/PrecisionManufacturingOutlined";
 import PaymentIcon from "@mui/icons-material/Payment";
 import CastForEducationIcon from "@mui/icons-material/CastForEducation";
-import ArtTrackIcon from '@mui/icons-material/ArtTrack';
+import ArtTrackIcon from "@mui/icons-material/ArtTrack";
+import CategoryIcon from "@mui/icons-material/Category";
 export default function NestedList() {
   const [bookingOpen, setBookingOpen] = React.useState(true);
   const [withdrawalOpen, setWithdrawalOpen] = React.useState(true);
@@ -103,6 +104,16 @@ export default function NestedList() {
             </IconButton>
           </ListItemIcon>
           <ListItemText primary="Art" sx={{ color: "white" }} />
+        </ListItemButton>
+      </Link>
+      <Link to="/category" style={{ textDecoration: "none" }}>
+        <ListItemButton>
+          <ListItemIcon>
+            <IconButton>
+              <CategoryIcon sx={{ fill: "white" }} />
+            </IconButton>
+          </ListItemIcon>
+          <ListItemText primary="Category" sx={{ color: "white" }} />
         </ListItemButton>
       </Link>
 
