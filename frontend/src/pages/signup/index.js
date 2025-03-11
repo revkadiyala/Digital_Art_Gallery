@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useState } from "react";
 import signupimg from "../../Images/pexels-photo-4238493.jpeg";
 import { postApihandler } from "../../Apihandler";
@@ -8,6 +10,9 @@ import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
+import GoogleIcon from "@mui/icons-material/Google";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import { Button } from "@mui/material";
 const countryCodeList = [
   {
     code: "AF",
@@ -1262,7 +1267,7 @@ export default function Signup() {
       } else if (res.status === 400) {
         swal(
           "Error",
-          res.message || "Bad Request. Please check your details.",
+          res.error.response.data.message || "Bad Request. Please check your details.",
           "error"
         );
       } else if (res.status === 401) {
@@ -1278,7 +1283,7 @@ export default function Signup() {
           "error"
         );
       } else {
-        swal("Error", res.message || "An unknown error occurred.", "error");
+        swal("Error", res.error.response.data.message || "An unknown error occurred.", "error");
       }
     } catch (error) {
       swal(
@@ -1289,22 +1294,21 @@ export default function Signup() {
       console.error("Error during signup:", error);
     }
   };
+
   const [value, setValue] = React.useState("1");
 
-  const handleChange = (newValue) => {
+  const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
   // ********* artist signup ***********
 
-
   const [artistname, setArtistName] = useState("");
-  const [artistemail , setArtistEmail] = useState("");
-  const [artistpassword , setArtistPassword] = useState("");
+  const [artistemail, setArtistEmail] = useState("");
+  const [artistpassword, setArtistPassword] = useState("");
   const [artistconfirmpassword, setArtistConfirmPassword] = useState("");
   const [artistnumber, setArtistNumber] = useState("");
-  const [artistcountrycode , setArtistCountryCode] = useState("");
-
+  const [artistcountrycode, setArtistCountryCode] = useState("");
   const artistSignup = async (e) => {
     e.preventDefault();
 
@@ -1356,8 +1360,6 @@ export default function Signup() {
       console.error("Error during signup:", error);
     }
   };
-
-  
   return (
     <div>
       <section>
@@ -1367,7 +1369,6 @@ export default function Signup() {
               <div class="signup_img">
                 <img src={signupimg} alt="" width="100%" />
               </div>
-              ``
             </div>
             <div class="col-md-6">
               <Box sx={{ width: "100%", typography: "body1" }}>
@@ -1383,6 +1384,7 @@ export default function Signup() {
                   </Box>
                   <TabPanel value="1">
                     <div class="signup-box">
+                      <h4>User</h4>
                       <h5>Sign Up Here to access your account</h5>
 
                       <form onSubmit={userSignup}>
@@ -1467,6 +1469,7 @@ export default function Signup() {
                         <button type="submit" class="btn btn-custom w-100">
                           PROCEED TO SIGN UP
                         </button>
+
                         <p class="mt-3">
                           Already have an account?{" "}
                           <a
@@ -1477,12 +1480,39 @@ export default function Signup() {
                             Login
                           </a>
                         </p>
+                        <div className="mt-4">
+                          <Button
+                            variant="outlined"
+                            startIcon={<GoogleIcon />}
+                            sx={{
+                              backgroundColor: "#5a2d82",
+                              color: "white",
+                              border: "none",
+                              padding: "7px 20px",
+                            }}
+                          >
+                            Login With Google
+                          </Button>
+                        </div>
+                        <div className="mt-3">
+                          <Button
+                            variant="outlined"
+                            startIcon={<FacebookIcon />}
+                            sx={{
+                              backgroundColor: "#5a2d82",
+                              color: "white",
+                              border: "none",
+                            }}
+                          >
+                            Login With Facebook
+                          </Button>
+                        </div>
                       </form>
                     </div>
                   </TabPanel>
                   <TabPanel value="2">
-                  <div class="signup-box">
-                    <h4>Artist</h4>
+                    <div class="signup-box">
+                      <h4>Artist</h4>
                       <h5>Sign Up Here to access your account</h5>
 
                       <form onSubmit={artistSignup}>
@@ -1515,7 +1545,9 @@ export default function Signup() {
                                 name="country_code"
                                 required
                                 className="w-full px-4 py-2  form-control focus:outline-none focus:ring-2 focus:ring-purple-600"
-                                onChange={(e) => setArtistCountryCode(e.target.value)}
+                                onChange={(e) =>
+                                  setArtistCountryCode(e.target.value)
+                                }
                               >
                                 {countryCodeList.map((val, ind) => (
                                   <option value={`+${val.phoneCode}`} key={ind}>
@@ -1530,7 +1562,9 @@ export default function Signup() {
                                 type="tel"
                                 placeholder="Enter your Mobile"
                                 fullWidth
-                                onChange={(e) => setArtistNumber(e.target.value)}
+                                onChange={(e) =>
+                                  setArtistNumber(e.target.value)
+                                }
                               />
                             </div>
                           </div>
@@ -1557,7 +1591,9 @@ export default function Signup() {
                             id="confirm-password"
                             placeholder="Confirm Password"
                             required
-                            onChange={(e) => setArtistConfirmPassword(e.target.value)}
+                            onChange={(e) =>
+                              setArtistConfirmPassword(e.target.value)
+                            }
                           />
                           <i
                             class="fa fa-eye password-toggle"

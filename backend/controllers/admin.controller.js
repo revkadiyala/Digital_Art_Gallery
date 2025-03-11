@@ -6,6 +6,8 @@ const admin = require('../models/admin.model');
 const user = require("../models/user.model");
 const multer = require('multer');
 const art = require("../models/art.model");
+const Art = require("../models/art.model");
+const Artist = require("../models/artist.model");
 const category = require("../models/category.model");
 
 const storage = multer.diskStorage({
@@ -109,6 +111,27 @@ exports.getAllUsers = async (req, res) => {
             data: users, 
             totalCount, // Include the total count
             message: "Users fetched successfully", 
+            status: 200 
+        });
+    } catch (error) {
+        return res.status(500).send({ 
+            message: error.message || 'An error occurred while fetching users', 
+            status: 500 
+        });
+    }
+};
+
+
+exports.getAllArtist = async (req, res) => {
+    try {
+        // Fetch all users except those marked as deleted
+        const users = await Artist.find({ deleteFlag: false }).select('-password'); // Exclude the password field
+        const totalCount = await Artist.countDocuments({ deleteFlag: false }); // Count the total users
+
+        return res.status(200).send({ 
+            data: users, 
+            totalCount, // Include the total count
+            message: "Artist get successfully", 
             status: 200 
         });
     } catch (error) {
@@ -363,3 +386,90 @@ exports.getCategories = async (req, res) => {
     }
 };
 
+// add comment
+exports.addComment = async (req, res) => {
+    try {
+        const { artId } = req.params;
+        const { userId, text } = req.body;
+
+        if (!userId || !text) {
+            return res.status(400).json({ error: "User ID and comment text are required" });
+        }
+
+        // Fetch user details correctly
+        const userData = await user.findById(userId);
+        if (!userData) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        // Fetch art details correctly
+        const artData = await art.findById(artId);
+        if (!artData) {
+            return res.status(404).json({ error: "Art not found" });
+        }
+
+        // Add the new comment with user name
+        const newComment = { userId, userName: userData.user_FullName, text, createdAt: new Date() };
+        artData.comments.push(newComment);
+
+        // Save the updated art document
+        await artData.save();
+
+        res.status(200).json({
+            message: "Comment added successfully",
+            commentCount: artData.comments.length, // Returning comment count
+            comments: artData.comments, // Return updated comments
+        });
+    } catch (error) {
+        console.error("Error adding comment", error);
+        res.status(500).json({ error: "Failed to add comment" });
+    }
+};
+
+// add like
+exports.addLike = async (req, res) => {
+    try {
+        const { artId } = req.params;
+        const { userId } = req.body;
+
+        if (!userId) {
+            return res.status(400).json({ error: "User ID is required" });
+        }
+
+        const artdata = await Art.findById(artId); // Use 'Art' (correct model reference)
+        if (!artdata) {
+            return res.status(404).json({ error: "Art not found" });
+        }
+
+        // Ensure likes is an array
+        if (!artdata.likes) {
+            artdata.likes = [];
+        }
+
+        const likeIndex = artdata.likes.findIndex((id) => id.toString() === userId);
+
+        let message;
+        if (likeIndex === -1) {
+            // Add like
+            artdata.likes.push(userId);
+            message = "Liked successfully";
+        } else {
+            // Remove like
+            artdata.likes.splice(likeIndex, 1);
+            message = "Unliked successfully";
+        }
+
+        // Save the updated art document
+        await artdata.save();
+
+        res.status(200).json({
+            message,
+            likeCount: artdata.likes.length,
+            art: artdata,
+        });
+
+    } catch (error) {
+        console.error("Error toggling like:", error);
+        res.status(500).json({ error: "Failed to toggle like" });
+    }
+};

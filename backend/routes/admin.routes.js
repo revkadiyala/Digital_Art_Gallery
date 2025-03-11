@@ -13,6 +13,8 @@ module.exports = (app)=>{
     // Delete user route
     app.delete('/api/deleteUser/:userId', admin.deleteUser);
 
+    app.get('/api/getAllArtist', admin.getAllArtist);
+
     //  Add Art
 
     app.post('/api/addArt',admin.upload.fields([{ name: "photos", maxCount: 50 }]),admin.addArt);
@@ -34,5 +36,7 @@ module.exports = (app)=>{
 
     app.get('/api/getAllCategory',admin.getCategories);
 
-    
+    app.post('/api/artComment/:artId', admin.addComment);
+
+    app.post('/api/artLike/:artId', admin.addLike);
 }

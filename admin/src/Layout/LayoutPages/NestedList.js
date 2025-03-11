@@ -13,7 +13,7 @@ import DraftsIcon from "@mui/icons-material/Drafts";
 import SendIcon from "@mui/icons-material/Send";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import StarBorder from "@mui/icons-material/StarBorder";
+import LogoutIcon from "@mui/icons-material/Logout";
 import { Link } from "react-router-dom";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import PeopleIcon from "@mui/icons-material/People";
@@ -22,6 +22,7 @@ import PaymentIcon from "@mui/icons-material/Payment";
 import CastForEducationIcon from "@mui/icons-material/CastForEducation";
 import ArtTrackIcon from "@mui/icons-material/ArtTrack";
 import CategoryIcon from "@mui/icons-material/Category";
+import { useNavigate } from "react-router-dom";
 export default function NestedList() {
   const [bookingOpen, setBookingOpen] = React.useState(true);
   const [withdrawalOpen, setWithdrawalOpen] = React.useState(true);
@@ -64,7 +65,14 @@ export default function NestedList() {
   const handleClick6 = () => {
     setOpen6(!open6);
   };
+  // ********** logout functionality ************
+  const navigate = useNavigate(); // Initialize navigate function
 
+  const handleLogout = () => {
+    localStorage.removeItem("x-access-token"); // Remove authentication token
+    localStorage.removeItem("userId"); // Remove user ID if stored
+    navigate("/login"); // Redirect to login page
+  };
   return (
     <List
       sx={{ width: "100%", maxWidth: 360, backgroundColor: "#5a2d82" }}
@@ -116,7 +124,14 @@ export default function NestedList() {
           <ListItemText primary="Category" sx={{ color: "white" }} />
         </ListItemButton>
       </Link>
-
+      <ListItemButton onClick={handleLogout}>
+        <ListItemIcon>
+          <IconButton>
+            <LogoutIcon sx={{ fill: "white" }} />
+          </IconButton>
+        </ListItemIcon>
+        <ListItemText primary="Logout" sx={{ color: "white" }} />
+      </ListItemButton>
       {/* <ListItemButton onClick={handleClick}>
         <ListItemIcon>
           <PeopleIcon

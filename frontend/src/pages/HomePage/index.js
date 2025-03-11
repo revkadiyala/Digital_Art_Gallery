@@ -5,6 +5,7 @@ import Scnd from "../../components/Home/scnd";
 import Thirdsec from "../../components/Home/thirdsec";
 import About from "../../components/Home/about";
 import Testimonial from "../../components/Home/testimonial";
+import Footer from "../../components/Footer";
 
 export default function HomePage() {
   return (
@@ -12,10 +13,10 @@ export default function HomePage() {
       <Header />
       <Banner />
       <Scnd />
-
       <Thirdsec />
       <Testimonial />
       <About />
+      <Footer />
     </>
   );
 }

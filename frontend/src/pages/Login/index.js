@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useState } from "react";
 import signupimg from "../../Images/pexels-photo-4238493.jpeg";
 import { postApihandler } from "../../Apihandler";
@@ -8,11 +10,13 @@ import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
-
+import { Button } from "@mui/material";
+import GoogleIcon from "@mui/icons-material/Google";
+import FacebookIcon from "@mui/icons-material/Facebook";
 export default function Login() {
   const [value, setValue] = React.useState("1");
 
-  const handleChange = ( newValue ) => {
+  const handleChange = (event, newValue) => {
     setValue(newValue);
   };
   const [email, setEmail] = useState("");
@@ -28,10 +32,11 @@ export default function Login() {
     const res = await postApihandler("/userLogin", data);
     // console.log("login api response is ---->", res);
     if (res.status === 200) {
+      localStorage.setItem("userData", JSON.stringify(res.data));
       swal(" Login Successfully");
       navigate("/homepage");
     } else {
-      swal("Error", res.message || "An unknown error occurred.", "error");
+      swal("Error", res.error.response.data.message || "An unknown error occurred.", "error");
     }
     // console.log("login api response is ------->", res);
   };
@@ -49,10 +54,12 @@ export default function Login() {
     const res = await postApihandler("/artistLogin", data);
     console.log("login api response is ---->", res);
     if (res.status === 200) {
+      localStorage.setItem("userData", JSON.stringify(res.data));
       swal(" Login Successfully");
-      // navigate("/");
+      localStorage.setItem("isArtistLoggedIn", "true");
+      navigate("/homepage");
     } else {
-      swal("Error", res.message || "An unknown error occurred.", "error");
+      swal("Error", res.error.response.data.message || "An unknown error occurred.", "error");
     }
   };
   return (
@@ -79,6 +86,8 @@ export default function Login() {
                   </Box>
                   <TabPanel value="1">
                     <div class="signup-box">
+                      <h4>User</h4>
+
                       <h5>Login Here to access your account</h5>
 
                       <form class="mt-5" onSubmit={userLogin}>
@@ -130,6 +139,7 @@ export default function Login() {
                         <button type="submit" class="btn btn-custom w-100 mt-4">
                           PROCEED TO LOGIN
                         </button>
+
                         <p class="mt-5">
                           Don’t have an account ?
                           <a
@@ -140,6 +150,33 @@ export default function Login() {
                           </a>{" "}
                           Here...!!!
                         </p>
+                        <div className="mt-4">
+                          <Button
+                            variant="outlined"
+                            startIcon={<GoogleIcon />}
+                            sx={{
+                              backgroundColor: "#5a2d82",
+                              color: "white",
+                              border: "none",
+                              padding: "7px 20px",
+                            }}
+                          >
+                            Login With Google
+                          </Button>
+                        </div>
+                        <div className="mt-3">
+                          <Button
+                            variant="outlined"
+                            startIcon={<FacebookIcon />}
+                            sx={{
+                              backgroundColor: "#5a2d82",
+                              color: "white",
+                              border: "none",
+                            }}
+                          >
+                            Login With Facebook
+                          </Button>
+                        </div>
                       </form>
                     </div>
                   </TabPanel>
