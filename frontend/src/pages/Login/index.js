@@ -231,9 +231,9 @@ export default function Login() {
                             <p>Forgot Password</p>
                           </div>
                         </div>
-
-                       
-                        
+                        <button type="submit" class="btn btn-custom w-100 mt-4">
+                          PROCEED TO LOGIN
+                        </button>
                         <p class="mt-5">
                           Don’t have an account ?
                           <a
