@@ -36,7 +36,11 @@ export default function Login() {
       swal(" Login Successfully");
       navigate("/homepage");
     } else {
-      swal("Error", res.error.response.data.message || "An unknown error occurred.", "error");
+      swal(
+        "Error",
+        res.error.response.data.message || "An unknown error occurred.",
+        "error"
+      );
     }
     // console.log("login api response is ------->", res);
   };
@@ -59,197 +63,220 @@ export default function Login() {
       localStorage.setItem("isArtistLoggedIn", "true");
       navigate("/homepage");
     } else {
-      swal("Error", res.error.response.data.message || "An unknown error occurred.", "error");
+      swal(
+        "Error",
+        res.error.response.data.message || "An unknown error occurred.",
+        "error"
+      );
     }
   };
   return (
     <div>
-      <section>
-        <div class="container">
+      <section className="signup_banner">
+        <div class="container d-flex justify-content-center">
           <div class="row">
-            <div class="col-md-6">
-              <div class="signup_img">
-                <img src={signupimg} alt="" width="100%" />
-              </div>
-            </div>
-            <div class="col-md-6">
-              <Box sx={{ width: "100%", typography: "body1" }}>
-                <TabContext value={value}>
-                  <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                    <TabList
-                      onChange={handleChange}
-                      aria-label="lab API tabs example"
-                    >
-                      <Tab label="User" value="1" />
-                      <Tab label="Artist" value="2" />
-                    </TabList>
-                  </Box>
-                  <TabPanel value="1">
-                    <div class="signup-box">
-                      <h4>User</h4>
+            <Box sx={{ width: "100%", typography: "body1", marginTop: "30px" }}>
+              <TabContext value={value}>
+                <Box
+                  sx={{
+                    borderBottom: 1,
+                    borderColor: "divider",
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
+                  <TabList
+                    onChange={handleChange}
+                    aria-label="lab API tabs example"
+                  >
+                    <Tab
+                      label="User"
+                      value="1"
+                      sx={{
+                        backgroundColor: "#5a2d82 ",
+                        color: "white",
+                        borderRadius: "8px",
+                        marginRight: "10px",
+                      }}
+                    />
+                    <Tab
+                      label="Artist"
+                      value="2"
+                      sx={{
+                        backgroundColor: "#5a2d82 ",
+                        color: "white",
+                        borderRadius: "8px",
+                        marginRight: "10px",
+                      }}
+                    />
+                  </TabList>
+                </Box>
+                <TabPanel value="1">
+                  <div class="signup-box">
+                    <h4>User</h4>
 
-                      <h5>Login Here to access your account</h5>
+                    <h5>Login Here to access your account</h5>
 
-                      <form class="mt-5" onSubmit={userLogin}>
-                        <div class="mb-4">
+                    <form class="mt-5" onSubmit={userLogin}>
+                      <div class="mb-4">
+                        <input
+                          type="email"
+                          class="form-control"
+                          placeholder="Email Address"
+                          required
+                          onChange={(e) => setEmail(e.target.value)}
+                        />
+                      </div>
+
+                      <div class="mb-4 position-relative">
+                        <input
+                          type="password"
+                          class="form-control"
+                          id="password"
+                          placeholder="Password"
+                          required
+                          onChange={(e) => setPassword(e.target.value)}
+                        />
+                        <i
+                          class="fa fa-eye password-toggle"
+                          onclick="togglePassword('password')"
+                        ></i>
+                      </div>
+                      <div class="form-check d-flex justify-content-between ">
+                        <div>
                           <input
-                            type="email"
-                            class="form-control"
-                            placeholder="Email Address"
-                            required
-                            onChange={(e) => setEmail(e.target.value)}
+                            class="form-check-input"
+                            type="checkbox"
+                            value=""
+                            id="flexCheckChecked"
+                            checked
                           />
+                          <label
+                            class="form-check-label"
+                            for="flexCheckChecked"
+                          >
+                            Remember Me
+                          </label>
                         </div>
+                        <div>
+                          <p>Forgot Password</p>
+                        </div>
+                      </div>
 
-                        <div class="mb-4 position-relative">
+                      <button type="submit" class="btn btn-custom w-100 mt-4">
+                        PROCEED TO LOGIN
+                      </button>
+
+                      <p class="mt-5">
+                        Don’t have an account ?
+                        <a
+                          href="/signup"
+                          style={{ color: "#4c1f7a", fontWeight: "700" }}
+                        >
+                          Sign Up
+                        </a>{" "}
+                        Here...!!!
+                      </p>
+                      <div className="mt-4">
+                        <Button
+                          variant="outlined"
+                          startIcon={<GoogleIcon />}
+                          sx={{
+                            backgroundColor: "#5a2d82",
+                            color: "white",
+                            border: "none",
+                            padding: "7px 20px",
+                          }}
+                        >
+                          Login With Google
+                        </Button>
+                      </div>
+                      <div className="mt-3">
+                        <Button
+                          variant="outlined"
+                          startIcon={<FacebookIcon />}
+                          sx={{
+                            backgroundColor: "#5a2d82",
+                            color: "white",
+                            border: "none",
+                          }}
+                        >
+                          Login With Facebook
+                        </Button>
+                      </div>
+                    </form>
+                  </div>
+                </TabPanel>
+                <TabPanel value="2">
+                  <div class="signup-box">
+                    <h4>Artist</h4>
+
+                    <h5>Login Here to access your account</h5>
+
+                    <form class="mt-5" onSubmit={artistLogin}>
+                      <div class="mb-4">
+                        <input
+                          type="email"
+                          class="form-control"
+                          placeholder="Email Address"
+                          required
+                          onChange={(e) => setArtistEmail(e.target.value)}
+                        />
+                      </div>
+
+                      <div class="mb-4 position-relative">
+                        <input
+                          type="password"
+                          class="form-control"
+                          id="password"
+                          placeholder="Password"
+                          required
+                          onChange={(e) => setArtistPassword(e.target.value)}
+                        />
+                        <i
+                          class="fa fa-eye password-toggle"
+                          onclick="togglePassword('password')"
+                        ></i>
+                      </div>
+                      <div class="form-check d-flex justify-content-between ">
+                        <div>
                           <input
-                            type="password"
-                            class="form-control"
-                            id="password"
-                            placeholder="Password"
-                            required
-                            onChange={(e) => setPassword(e.target.value)}
+                            class="form-check-input"
+                            type="checkbox"
+                            value=""
+                            id="flexCheckChecked"
+                            checked
                           />
-                          <i
-                            class="fa fa-eye password-toggle"
-                            onclick="togglePassword('password')"
-                          ></i>
-                        </div>
-                        <div class="form-check d-flex justify-content-between ">
-                          <div>
-                            <input
-                              class="form-check-input"
-                              type="checkbox"
-                              value=""
-                              id="flexCheckChecked"
-                              checked
-                            />
-                            <label
-                              class="form-check-label"
-                              for="flexCheckChecked"
-                            >
-                              Remember Me
-                            </label>
-                          </div>
-                          <div>
-                            <p>Forgot Password</p>
-                          </div>
-                        </div>
-
-                        <button type="submit" class="btn btn-custom w-100 mt-4">
-                          PROCEED TO LOGIN
-                        </button>
-
-                        <p class="mt-5">
-                          Don’t have an account ?
-                          <a
-                            href="/signup"
-                            style={{ color: "#4c1f7a", fontWeight: "700" }}
+                          <label
+                            class="form-check-label"
+                            for="flexCheckChecked"
                           >
-                            Sign Up
-                          </a>{" "}
-                          Here...!!!
-                        </p>
-                        <div className="mt-4">
-                          <Button
-                            variant="outlined"
-                            startIcon={<GoogleIcon />}
-                            sx={{
-                              backgroundColor: "#5a2d82",
-                              color: "white",
-                              border: "none",
-                              padding: "7px 20px",
-                            }}
-                          >
-                            Login With Google
-                          </Button>
+                            Remember Me
+                          </label>
                         </div>
-                        <div className="mt-3">
-                          <Button
-                            variant="outlined"
-                            startIcon={<FacebookIcon />}
-                            sx={{
-                              backgroundColor: "#5a2d82",
-                              color: "white",
-                              border: "none",
-                            }}
-                          >
-                            Login With Facebook
-                          </Button>
+                        <div>
+                          <p>Forgot Password</p>
                         </div>
-                      </form>
-                    </div>
-                  </TabPanel>
-                  <TabPanel value="2">
-                    <div class="signup-box">
-                      <h4>Artist</h4>
+                      </div>
 
-                      <h5>Login Here to access your account</h5>
-
-                      <form class="mt-5" onSubmit={artistLogin}>
-                        <div class="mb-4">
-                          <input
-                            type="email"
-                            class="form-control"
-                            placeholder="Email Address"
-                            required
-                            onChange={(e) => setArtistEmail(e.target.value)}
-                          />
-                        </div>
-
-                        <div class="mb-4 position-relative">
-                          <input
-                            type="password"
-                            class="form-control"
-                            id="password"
-                            placeholder="Password"
-                            required
-                            onChange={(e) => setArtistPassword(e.target.value)}
-                          />
-                          <i
-                            class="fa fa-eye password-toggle"
-                            onclick="togglePassword('password')"
-                          ></i>
-                        </div>
-                        <div class="form-check d-flex justify-content-between ">
-                          <div>
-                            <input
-                              class="form-check-input"
-                              type="checkbox"
-                              value=""
-                              id="flexCheckChecked"
-                              checked
-                            />
-                            <label
-                              class="form-check-label"
-                              for="flexCheckChecked"
-                            >
-                              Remember Me
-                            </label>
-                          </div>
-                          <div>
-                            <p>Forgot Password</p>
-                          </div>
-                        </div>
-                        <button type="submit" class="btn btn-custom w-100 mt-4">
-                          PROCEED TO LOGIN
-                        </button>
-                        <p class="mt-5">
-                          Don’t have an account ?
-                          <a
-                            href="/signup"
-                            style={{ color: "#4c1f7a", fontWeight: "700" }}
-                          >
-                            Sign Up
-                          </a>{" "}
-                          Here...!!!
-                        </p>
-                      </form>
-                    </div>
-                  </TabPanel>
-                </TabContext>
-              </Box>
-            </div>
+                      <button type="submit" class="btn btn-custom w-100 mt-4">
+                        PROCEED TO LOGIN
+                      </button>
+                      <p class="mt-5">
+                        Don’t have an account ?
+                        <a
+                          href="/signup"
+                          style={{ color: "#4c1f7a", fontWeight: "700" }}
+                        >
+                          Sign Up
+                        </a>{" "}
+                        Here...!!!
+                      </p>
+                    </form>
+                  </div>
+                </TabPanel>
+              </TabContext>
+            </Box>
           </div>
         </div>
       </section>

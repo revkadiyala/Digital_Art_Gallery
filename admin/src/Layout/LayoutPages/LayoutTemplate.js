@@ -21,6 +21,9 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import NestedList from "./NestedList";
 import { alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
+import { Button } from "@mui/material";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import LogoutIcon from "@mui/icons-material/Logout";
 // import logo from "../../Images/logo.png";
 function Copyright(props) {
   return (
@@ -140,42 +143,68 @@ export default function LayoutTemplate({ children }) {
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
-        <AppBar position="absolute" open={open} className="bg-yellow-ping-grad">
+
+        <AppBar
+          position="absolute"
+          open={open}
+          className="bg-yellow-ping-grad"
+          elevation={0} // Removes default shadow
+          sx={{ boxShadow: "none" }} // Ensures no box shadow
+        >
           <Toolbar
             sx={{
               display: "flex",
               justifyContent: "space-between",
-              backgroundColor: "#5a2d82",
+              backgroundColor: "white",
             }}
           >
-            <IconButton
-              edge="start"
-              backgroundColor="black"
-              aria-label="open drawer"
-              onClick={toggleDrawer}
-              sx={{
-                marginRight: "36px",
-                ...(open && { display: "none" }),
-              }}
-            >
-              <MenuIcon sx={{ color: "white" }} />
-            </IconButton>
-            {/* <img src={logo} /> */}
-            <IconButton color="secondry">
-              <Badge
-                // badgeContent={4}
+            <div>
+              <IconButton
+                edge="start"
+                backgroundColor="black"
+                aria-label="open drawer"
+                onClick={toggleDrawer}
                 sx={{
-                  backgroundColor: "white",
-                  borderRadius: "50%",
-                  padding: "7px",
-                  color: "#5a2d82",
+                  marginRight: "36px",
+                  ...(open && { display: "none" }),
                 }}
               >
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
+                <MenuIcon sx={{ color: "black" }} />
+              </IconButton>
+            </div>
+            <div>
+              <Button
+                variant="outlined"
+                startIcon={<AccountCircleIcon />}
+                sx={{
+                  backgroundColor: "#5a2d82",
+                  border: "none",
+                  color: "white",
+                  borderRadius: "8px",
+                }}
+              >
+                Admin
+              </Button>
+              <a href="/login">
+                <Button
+                  variant="outlined"
+                  startIcon={<LogoutIcon />}
+                  sx={{
+                    backgroundColor: "transparent",
+                    border: "1px solid #666",
+                    borderRadius: "8px",
+                    color: "#666",
+                    marginLeft: "10px",
+                    backgroundColor: "#dedede",
+                  }}
+                >
+                  Logout
+                </Button>
+              </a>
+            </div>
           </Toolbar>
         </AppBar>
+
         <Drawer variant="permanent" open={open}>
           <Toolbar
             sx={{
@@ -183,11 +212,13 @@ export default function LayoutTemplate({ children }) {
               alignItems: "center",
               justifyContent: "flex-end",
               px: [1],
-              backgroundColor: "#5a2d82",
+              backgroundColor: "white",
+
+              boxShadow: "none",
             }}
           >
             <IconButton onClick={toggleDrawer}>
-              <ChevronLeftIcon sx={{ color: "white" }} />
+              <ChevronLeftIcon sx={{ color: "black" }} />
             </IconButton>
           </Toolbar>
           <Divider />

@@ -68,11 +68,6 @@ export default function NestedList() {
   // ********** logout functionality ************
   const navigate = useNavigate(); // Initialize navigate function
 
-  const handleLogout = () => {
-    localStorage.removeItem("x-access-token"); // Remove authentication token
-    localStorage.removeItem("userId"); // Remove user ID if stored
-    navigate("/login"); // Redirect to login page
-  };
   return (
     <List
       sx={{ width: "100%", maxWidth: 360, backgroundColor: "#5a2d82" }}
@@ -124,14 +119,7 @@ export default function NestedList() {
           <ListItemText primary="Category" sx={{ color: "white" }} />
         </ListItemButton>
       </Link>
-      <ListItemButton onClick={handleLogout}>
-        <ListItemIcon>
-          <IconButton>
-            <LogoutIcon sx={{ fill: "white" }} />
-          </IconButton>
-        </ListItemIcon>
-        <ListItemText primary="Logout" sx={{ color: "white" }} />
-      </ListItemButton>
+
       {/* <ListItemButton onClick={handleClick}>
         <ListItemIcon>
           <PeopleIcon

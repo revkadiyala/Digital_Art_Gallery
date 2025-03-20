@@ -1,5 +1,3 @@
-module.exports = {
-    
-    url:"mongodb+srv://vermadiksha3196:WXDo4nVoD8PpCICz@cluster0.it8ad.mongodb.net/DigitalArtGallery"
-
+module.exports = {  
+    url:"mongodb://127.0.0.1:27017/DigitalArtGallery"
 }

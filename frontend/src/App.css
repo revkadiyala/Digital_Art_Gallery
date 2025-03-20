@@ -1,8 +1,10 @@
+/** @format */
+
 .App {
   text-align: center;
 }
 
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -33,7 +35,6 @@
 .btn-custom:hover {
   background-color: #472267;
   color: white;
-
 }
 .password-toggle {
   position: absolute;
@@ -42,11 +43,21 @@
   transform: translateY(-50%);
   cursor: pointer;
 }
-.signup_img{
+.signup_img {
   margin-top: 30px;
-
 }
-.signup_img img{
+.signup_img img {
   height: 520px;
   object-fit: cover;
+}
+.signup_banner {
+  background-image: url(./Images/signupbanner.jpg);
+  background-size: cover;
+}
+.css-ybdmyu-MuiButtonBase-root-MuiTab-root.Mui-selected {
+  color: white !important;
+}
+
+.css-1x6krcq-MuiButtonBase-root-MuiTab-root.Mui-selected {
+  color: white !important;
 }

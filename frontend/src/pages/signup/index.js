@@ -1267,7 +1267,8 @@ export default function Signup() {
       } else if (res.status === 400) {
         swal(
           "Error",
-          res.error.response.data.message || "Bad Request. Please check your details.",
+          res.error.response.data.message ||
+            "Bad Request. Please check your details.",
           "error"
         );
       } else if (res.status === 401) {
@@ -1283,7 +1284,11 @@ export default function Signup() {
           "error"
         );
       } else {
-        swal("Error", res.error.response.data.message || "An unknown error occurred.", "error");
+        swal(
+          "Error",
+          res.error.response.data.message || "An unknown error occurred.",
+          "error"
+        );
       }
     } catch (error) {
       swal(
@@ -1362,263 +1367,278 @@ export default function Signup() {
   };
   return (
     <div>
-      <section>
-        <div class="container">
+      <section className="signup_banner">
+        <div class="container d-flex justify-content-center">
           <div class="row">
-            <div class="col-md-6">
-              <div class="signup_img">
-                <img src={signupimg} alt="" width="100%" />
-              </div>
-            </div>
-            <div class="col-md-6">
-              <Box sx={{ width: "100%", typography: "body1" }}>
-                <TabContext value={value}>
-                  <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                    <TabList
-                      onChange={handleChange}
-                      aria-label="lab API tabs example"
-                    >
-                      <Tab label="User" value="1" />
-                      <Tab label="Artist" value="2" />
-                    </TabList>
-                  </Box>
-                  <TabPanel value="1">
-                    <div class="signup-box">
-                      <h4>User</h4>
-                      <h5>Sign Up Here to access your account</h5>
+            <Box sx={{ width: "100%", typography: "body1", marginTop: "20px" }}>
+              <TabContext value={value}>
+                <Box
+                  sx={{
+                    borderBottom: 1,
+                    borderColor: "divider",
+                    justifyContent: "center",
+                    display: "flex",
+                  }}
+                >
+                  <TabList
+                    onChange={handleChange}
+                    aria-label="lab API tabs example"
+                  >
+                    <Tab
+                      label="User"
+                      value="1"
+                      sx={{
+                        backgroundColor: "#5a2d82 ",
+                        color: "white",
+                        borderRadius: "8px",
+                        marginRight: "10px",
+                      }}
+                    />
+                    <Tab
+                      label="Artist"
+                      value="2"
+                      sx={{
+                        backgroundColor: "#5a2d82 ",
+                        color: "white",
+                        borderRadius: "8px",
+                      }}
+                    />
+                  </TabList>
+                </Box>
+                <TabPanel value="1">
+                  <div class="signup-box">
+                    <h4>User</h4>
+                    <h5>Sign Up Here to access your account</h5>
 
-                      <form onSubmit={userSignup}>
-                        <div class="mb-3">
-                          <input
-                            type="text"
-                            class="form-control"
-                            placeholder="Full Name"
-                            required
-                            onChange={(e) => setName(e.target.value)}
-                          />
-                        </div>
-                        <div class="mb-3">
-                          <input
-                            type="email"
-                            class="form-control"
-                            placeholder="Email Address"
-                            required
-                            onChange={(e) => setEmail(e.target.value)}
-                          />
-                        </div>
-                        <div className="mb-4">
-                          {/* <Typography sx={{ textAlign: "start", fontSize: "20px" }}>
+                    <form onSubmit={userSignup}>
+                      <div class="mb-3">
+                        <input
+                          type="text"
+                          class="form-control"
+                          placeholder="Full Name"
+                          required
+                          onChange={(e) => setName(e.target.value)}
+                        />
+                      </div>
+                      <div class="mb-3">
+                        <input
+                          type="email"
+                          class="form-control"
+                          placeholder="Email Address"
+                          required
+                          onChange={(e) => setEmail(e.target.value)}
+                        />
+                      </div>
+                      <div className="mb-4">
+                        {/* <Typography sx={{ textAlign: "start", fontSize: "20px" }}>
                       Mobile
                     </Typography> */}
-                          <div className="row">
-                            <div className="col-md-5">
-                              <select
-                                id="country_code"
-                                name="country_code"
-                                required
-                                className="w-full px-4 py-2  form-control focus:outline-none focus:ring-2 focus:ring-purple-600"
-                                onChange={(e) => setCountryCode(e.target.value)}
-                              >
-                                {countryCodeList.map((val, ind) => (
-                                  <option value={`+${val.phoneCode}`} key={ind}>
-                                    {val.countryFlag} +{val.phoneCode}
-                                  </option>
-                                ))}
-                              </select>
-                            </div>
-                            <div className=" col-md-7">
-                              <input
-                                class="form-control"
-                                type="tel"
-                                placeholder="Enter your Mobile"
-                                fullWidth
-                                onChange={(e) => setphonenumber(e.target.value)}
-                              />
-                            </div>
+                        <div className="row">
+                          <div className="col-md-5">
+                            <select
+                              id="country_code"
+                              name="country_code"
+                              required
+                              className="w-full px-4 py-2  form-control focus:outline-none focus:ring-2 focus:ring-purple-600"
+                              onChange={(e) => setCountryCode(e.target.value)}
+                            >
+                              {countryCodeList.map((val, ind) => (
+                                <option value={`+${val.phoneCode}`} key={ind}>
+                                  {val.countryFlag} +{val.phoneCode}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                          <div className=" col-md-7">
+                            <input
+                              class="form-control"
+                              type="tel"
+                              placeholder="Enter your Mobile"
+                              fullWidth
+                              onChange={(e) => setphonenumber(e.target.value)}
+                            />
                           </div>
                         </div>
+                      </div>
 
-                        <div class="mb-3 position-relative">
-                          <input
-                            type="password"
-                            class="form-control"
-                            id="password"
-                            placeholder="Password"
-                            required
-                            onChange={(e) => setPassword(e.target.value)}
-                          />
-                          <i
-                            class="fa fa-eye password-toggle"
-                            onclick="togglePassword('password')"
-                          ></i>
-                        </div>
-                        <div class="mb-3 position-relative">
-                          <input
-                            type="password"
-                            class="form-control"
-                            id="confirm-password"
-                            placeholder="Confirm Password"
-                            required
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                          />
-                          <i
-                            class="fa fa-eye password-toggle"
-                            onclick="togglePassword('confirm-password')"
-                          ></i>
-                        </div>
-                        <button type="submit" class="btn btn-custom w-100">
-                          PROCEED TO SIGN UP
-                        </button>
+                      <div class="mb-3 position-relative">
+                        <input
+                          type="password"
+                          class="form-control"
+                          id="password"
+                          placeholder="Password"
+                          required
+                          onChange={(e) => setPassword(e.target.value)}
+                        />
+                        <i
+                          class="fa fa-eye password-toggle"
+                          onclick="togglePassword('password')"
+                        ></i>
+                      </div>
+                      <div class="mb-3 position-relative">
+                        <input
+                          type="password"
+                          class="form-control"
+                          id="confirm-password"
+                          placeholder="Confirm Password"
+                          required
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                        />
+                        <i
+                          class="fa fa-eye password-toggle"
+                          onclick="togglePassword('confirm-password')"
+                        ></i>
+                      </div>
+                      <button type="submit" class="btn btn-custom w-100">
+                        PROCEED TO SIGN UP
+                      </button>
 
-                        <p class="mt-3">
-                          Already have an account?{" "}
-                          <a
-                            href="/"
-                            class="fw-bold"
-                            style={{ color: "#4c1f7a" }}
-                          >
-                            Login
-                          </a>
-                        </p>
-                        <div className="mt-4">
-                          <Button
-                            variant="outlined"
-                            startIcon={<GoogleIcon />}
-                            sx={{
-                              backgroundColor: "#5a2d82",
-                              color: "white",
-                              border: "none",
-                              padding: "7px 20px",
-                            }}
-                          >
-                            Login With Google
-                          </Button>
-                        </div>
-                        <div className="mt-3">
-                          <Button
-                            variant="outlined"
-                            startIcon={<FacebookIcon />}
-                            sx={{
-                              backgroundColor: "#5a2d82",
-                              color: "white",
-                              border: "none",
-                            }}
-                          >
-                            Login With Facebook
-                          </Button>
-                        </div>
-                      </form>
-                    </div>
-                  </TabPanel>
-                  <TabPanel value="2">
-                    <div class="signup-box">
-                      <h4>Artist</h4>
-                      <h5>Sign Up Here to access your account</h5>
+                      <p class="mt-3">
+                        Already have an account?{" "}
+                        <a
+                          href="/"
+                          class="fw-bold"
+                          style={{ color: "#4c1f7a" }}
+                        >
+                          Login
+                        </a>
+                      </p>
+                      <div className="mt-4">
+                        <Button
+                          variant="outlined"
+                          startIcon={<GoogleIcon />}
+                          sx={{
+                            backgroundColor: "#5a2d82",
+                            color: "white",
+                            border: "none",
+                            padding: "7px 20px",
+                          }}
+                        >
+                          Login With Google
+                        </Button>
+                      </div>
+                      <div className="mt-3">
+                        <Button
+                          variant="outlined"
+                          startIcon={<FacebookIcon />}
+                          sx={{
+                            backgroundColor: "#5a2d82",
+                            color: "white",
+                            border: "none",
+                          }}
+                        >
+                          Login With Facebook
+                        </Button>
+                      </div>
+                    </form>
+                  </div>
+                </TabPanel>
+                <TabPanel value="2">
+                  <div class="signup-box">
+                    <h4>Artist</h4>
+                    <h5>Sign Up Here to access your account</h5>
 
-                      <form onSubmit={artistSignup}>
-                        <div class="mb-3">
-                          <input
-                            type="text"
-                            class="form-control"
-                            placeholder="Full Name"
-                            required
-                            onChange={(e) => setArtistName(e.target.value)}
-                          />
-                        </div>
-                        <div class="mb-3">
-                          <input
-                            type="email"
-                            class="form-control"
-                            placeholder="Email Address"
-                            required
-                            onChange={(e) => setArtistEmail(e.target.value)}
-                          />
-                        </div>
-                        <div className="mb-4">
-                          {/* <Typography sx={{ textAlign: "start", fontSize: "20px" }}>
+                    <form onSubmit={artistSignup}>
+                      <div class="mb-3">
+                        <input
+                          type="text"
+                          class="form-control"
+                          placeholder="Full Name"
+                          required
+                          onChange={(e) => setArtistName(e.target.value)}
+                        />
+                      </div>
+                      <div class="mb-3">
+                        <input
+                          type="email"
+                          class="form-control"
+                          placeholder="Email Address"
+                          required
+                          onChange={(e) => setArtistEmail(e.target.value)}
+                        />
+                      </div>
+                      <div className="mb-4">
+                        {/* <Typography sx={{ textAlign: "start", fontSize: "20px" }}>
                       Mobile
                     </Typography> */}
-                          <div className="row">
-                            <div className="col-md-5">
-                              <select
-                                id="country_code"
-                                name="country_code"
-                                required
-                                className="w-full px-4 py-2  form-control focus:outline-none focus:ring-2 focus:ring-purple-600"
-                                onChange={(e) =>
-                                  setArtistCountryCode(e.target.value)
-                                }
-                              >
-                                {countryCodeList.map((val, ind) => (
-                                  <option value={`+${val.phoneCode}`} key={ind}>
-                                    {val.countryFlag} +{val.phoneCode}
-                                  </option>
-                                ))}
-                              </select>
-                            </div>
-                            <div className=" col-md-7">
-                              <input
-                                class="form-control"
-                                type="tel"
-                                placeholder="Enter your Mobile"
-                                fullWidth
-                                onChange={(e) =>
-                                  setArtistNumber(e.target.value)
-                                }
-                              />
-                            </div>
+                        <div className="row">
+                          <div className="col-md-5">
+                            <select
+                              id="country_code"
+                              name="country_code"
+                              required
+                              className="w-full px-4 py-2  form-control focus:outline-none focus:ring-2 focus:ring-purple-600"
+                              onChange={(e) =>
+                                setArtistCountryCode(e.target.value)
+                              }
+                            >
+                              {countryCodeList.map((val, ind) => (
+                                <option value={`+${val.phoneCode}`} key={ind}>
+                                  {val.countryFlag} +{val.phoneCode}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                          <div className=" col-md-7">
+                            <input
+                              class="form-control"
+                              type="tel"
+                              placeholder="Enter your Mobile"
+                              fullWidth
+                              onChange={(e) => setArtistNumber(e.target.value)}
+                            />
                           </div>
                         </div>
+                      </div>
 
-                        <div class="mb-3 position-relative">
-                          <input
-                            type="password"
-                            class="form-control"
-                            id="password"
-                            placeholder="Password"
-                            required
-                            onChange={(e) => setArtistPassword(e.target.value)}
-                          />
-                          <i
-                            class="fa fa-eye password-toggle"
-                            onclick="togglePassword('password')"
-                          ></i>
-                        </div>
-                        <div class="mb-3 position-relative">
-                          <input
-                            type="password"
-                            class="form-control"
-                            id="confirm-password"
-                            placeholder="Confirm Password"
-                            required
-                            onChange={(e) =>
-                              setArtistConfirmPassword(e.target.value)
-                            }
-                          />
-                          <i
-                            class="fa fa-eye password-toggle"
-                            onclick="togglePassword('confirm-password')"
-                          ></i>
-                        </div>
-                        <button type="submit" class="btn btn-custom w-100">
-                          PROCEED TO SIGN UP
-                        </button>
-                        <p class="mt-3">
-                          Already have an account?{" "}
-                          <a
-                            href="/"
-                            class="fw-bold"
-                            style={{ color: "#4c1f7a" }}
-                          >
-                            Login
-                          </a>
-                        </p>
-                      </form>
-                    </div>
-                  </TabPanel>
-                </TabContext>
-              </Box>
-            </div>
+                      <div class="mb-3 position-relative">
+                        <input
+                          type="password"
+                          class="form-control"
+                          id="password"
+                          placeholder="Password"
+                          required
+                          onChange={(e) => setArtistPassword(e.target.value)}
+                        />
+                        <i
+                          class="fa fa-eye password-toggle"
+                          onclick="togglePassword('password')"
+                        ></i>
+                      </div>
+                      <div class="mb-3 position-relative">
+                        <input
+                          type="password"
+                          class="form-control"
+                          id="confirm-password"
+                          placeholder="Confirm Password"
+                          required
+                          onChange={(e) =>
+                            setArtistConfirmPassword(e.target.value)
+                          }
+                        />
+                        <i
+                          class="fa fa-eye password-toggle"
+                          onclick="togglePassword('confirm-password')"
+                        ></i>
+                      </div>
+                      <button type="submit" class="btn btn-custom w-100">
+                        PROCEED TO SIGN UP
+                      </button>
+                      <p class="mt-3">
+                        Already have an account?{" "}
+                        <a
+                          href="/"
+                          class="fw-bold"
+                          style={{ color: "#4c1f7a" }}
+                        >
+                          Login
+                        </a>
+                      </p>
+                    </form>
+                  </div>
+                </TabPanel>
+              </TabContext>
+            </Box>
           </div>
         </div>
       </section>
