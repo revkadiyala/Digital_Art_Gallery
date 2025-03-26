@@ -473,3 +473,33 @@ exports.addLike = async (req, res) => {
         res.status(500).json({ error: "Failed to toggle like" });
     }
 };
+
+
+exports.getAllCount = async (req, res) => {
+    try {
+      // Fetching counts from each model
+      const userCount = await user.countDocuments();
+      const artCount = await art.countDocuments();
+      const artistCount = await Artist.countDocuments();
+      const categoryCount = await category.countDocuments();
+  
+      // Sending response
+      res.status(200).json({
+        success: true,
+        message: "Counts fetched successfully",
+        data: {
+          users: userCount,
+          arts: artCount,
+          artists: artistCount,
+          categories: categoryCount,
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching counts:", error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch counts",
+        error: error.message,
+      });
+    }
+  };

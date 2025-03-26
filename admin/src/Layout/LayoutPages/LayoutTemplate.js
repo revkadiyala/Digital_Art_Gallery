@@ -23,7 +23,7 @@ import { alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 import { Button } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import LogoutIcon from "@mui/icons-material/Logout";
+
 // import logo from "../../Images/logo.png";
 function Copyright(props) {
   return (
@@ -185,22 +185,7 @@ export default function LayoutTemplate({ children }) {
               >
                 Admin
               </Button>
-              <a href="/login">
-                <Button
-                  variant="outlined"
-                  startIcon={<LogoutIcon />}
-                  sx={{
-                    backgroundColor: "transparent",
-                    border: "1px solid #666",
-                    borderRadius: "8px",
-                    color: "#666",
-                    marginLeft: "10px",
-                    backgroundColor: "#dedede",
-                  }}
-                >
-                  Logout
-                </Button>
-              </a>
+             
             </div>
           </Toolbar>
         </AppBar>

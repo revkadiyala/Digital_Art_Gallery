@@ -39,4 +39,8 @@ module.exports = (app)=>{
     app.post('/api/artComment/:artId', admin.addComment);
 
     app.post('/api/artLike/:artId', admin.addLike);
+
+    app.get('/api/getAllCount',admin.getAllCount);
+    
+    
 }

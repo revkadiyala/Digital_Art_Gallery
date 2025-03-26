@@ -33,6 +33,7 @@ export default function Login() {
     // console.log("login api response is ---->", res);
     if (res.status === 200) {
       localStorage.setItem("userData", JSON.stringify(res.data));
+      localStorage.setItem("isArtistLoggedIn", false);
       swal(" Login Successfully");
       navigate("/homepage");
     } else {
@@ -60,7 +61,7 @@ export default function Login() {
     if (res.status === 200) {
       localStorage.setItem("userData", JSON.stringify(res.data));
       swal(" Login Successfully");
-      localStorage.setItem("isArtistLoggedIn", "true");
+      localStorage.setItem("isArtistLoggedIn", true);
       navigate("/homepage");
     } else {
       swal(

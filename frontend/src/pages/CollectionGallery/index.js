@@ -66,9 +66,7 @@ export default function CollectionGallery() {
             </Typography>
           </Col>
           <Col className="text-end">
-            <Button variant="primary" onClick={() => setShowModal(true)}>
-              <Add /> Add Collection
-            </Button>
+           
           </Col>
         </Row>
 

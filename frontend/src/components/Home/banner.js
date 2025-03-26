@@ -7,6 +7,7 @@ import "../../Css/home.css";
 import { Box, Modal, TextField } from "@mui/material";
 import { getApihandler, postApihandler } from "../../Apihandler";
 import Swal from "sweetalert2";
+import { AddCircle } from "@mui/icons-material";
 // import { Button } from "@mui/material";
 const style = {
   position: "absolute",
@@ -30,8 +31,9 @@ export default function Banner() {
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
   const [photos, setPhotos] = useState([]);
-  // const [artid, setArtId] = useState("");
-  // const [index, setIndex] = useState("");
+  const [isArtistLoggedIn, setIsArtistLoggedIn] = useState(false);
+  console.log("isArtistLoggedIn",typeof isArtistLoggedIn);
+  
   const handleFileChange = (e) => {
     setPhotos(Array.from(e.target.files)); // Convert FileList to an array
   };
@@ -71,9 +73,10 @@ export default function Banner() {
       // getArt();
     }
   };
-  const [isArtistLoggedIn, setIsArtistLoggedIn] = useState(false);
+ 
   useEffect(() => {
-    const loggedIn = localStorage.getItem("isArtistLoggedIn") === "true";
+    const loggedIn = localStorage.getItem("isArtistLoggedIn");
+
     setIsArtistLoggedIn(loggedIn);
   }, []);
   return (
@@ -81,58 +84,108 @@ export default function Banner() {
       <section className="digital_bg_img">
         <Container>
           <Row>
-            <Col
-              md={6}
-              className="d-flex align-items-center justify-content-center"
-            >
-              <div className=" ">
-                {isArtistLoggedIn ? (
-                  <Button
-                    style={{
-                      backgroundColor: "rgb(201, 55, 55)",
-                      border: "none",
-                      padding: "7px 20px",
-                    }}
-                    onClick={handleOpen}
-                  >
-                    Add Art
-                  </Button>
-                ) : (
-                  <p style={{ color: "white" }}>Please log in to add art.</p>
-                )}
-              </div>
-            </Col>
+          <Col md={6} className="d-flex align-items-center justify-content-center">
+  {isArtistLoggedIn === "true" ? (
+    <div
+      style={{
+        background: "linear-gradient(135deg, #2e2e2e, #1a1a1a)",
+        padding: "30px",
+        borderRadius: "15px",
+        textAlign: "center",
+        boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.3)",
+        maxWidth: "400px",
+      }}
+    >
+      <h3 style={{ color: "#fff", fontWeight: "bold", marginBottom: "10px" }}>
+        Showcase Your Art
+      </h3>
+      <p style={{ color: "#ccc", fontSize: "14px", marginBottom: "20px" }}>
+        Upload your masterpiece and share it with the world.
+      </p>
+
+      <Button
+        variant="contained"
+        onClick={handleOpen}
+        style={{
+          backgroundColor: "white",
+          color: "black",
+          borderRadius: "20px",
+          padding: "10px 25px",
+          fontWeight: "bold",
+          fontSize: "16px",
+        }}
+      >
+        Add Art
+      </Button>
+    </div>
+  ) : (
+    <div
+      style={{
+        background: "#2e2e2e",
+        padding: "20px",
+        borderRadius: "10px",
+        textAlign: "center",
+        boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.3)",
+        maxWidth: "500px",
+        color: "white",
+      }}
+    >
+      <h5>Search Art</h5>
+      <TextField
+        label="Price"
+        variant="outlined"
+        fullWidth
+        margin="normal"
+        value={price}
+        onChange={(e) => setPrice(e.target.value)}
+        sx={{ backgroundColor: "#fff", borderRadius: "5px" }}
+      />
+      <select
+        value={selectedCategory}
+        onChange={(e) => setSelectedCategory(e.target.value)}
+        className="form-control mt-2"
+        style={{ padding: "10px", borderRadius: "5px" }}
+      >
+        <option value="">Select a category</option>
+        {categories.map((category) => (
+          <option key={category.category_name} value={category.category_name}>
+            {category.category_name}
+          </option>
+        ))}
+      </select>
+      <Button
+        variant="contained"
+        className="mt-3"
+        style={{
+          backgroundColor: "rgb(201, 55, 55)",
+          border: "none",
+          padding: "7px 20px",
+          color: "white",
+          width: "100%",
+        }}
+        onClick={() => console.log("Searching art...")}
+      >
+        Search
+      </Button>
+    </div>
+  )}
+</Col>
+
             <Col md={6} className="mt-5">
               <Carousel>
                 <Carousel.Item>
                   <img src={sliderimg1} />
-                  <Carousel.Caption>
-                    <h3>First slide label</h3>
-                    <p>
-                      Nulla vitae elit libero, a pharetra augue mollis interdum.
-                    </p>
-                  </Carousel.Caption>
+                 
                 </Carousel.Item>
                 <Carousel.Item>
                   {/* <ExampleCarouselImage text="Second slide" /> */}
                   <img src={sliderimg2} />
-                  <Carousel.Caption>
-                    <h3>Second slide label</h3>
-                    <p>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    </p>
-                  </Carousel.Caption>
+                  
                 </Carousel.Item>
                 <Carousel.Item>
                   <img src={sliderimg3} />
                   {/* <ExampleCarouselImage text="Third slide" /> */}
-                  <Carousel.Caption>
-                    <h3>Third slide label</h3>
-                    <p>
-                      Praesent commodo cursus magna, vel scelerisque nisl
-                      consectetur.
-                    </p>
-                  </Carousel.Caption>
+                 
                 </Carousel.Item>
               </Carousel>
             </Col>
