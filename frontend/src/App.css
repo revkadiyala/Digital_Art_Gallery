@@ -1,0 +1,63 @@
+/** @format */
+
+.App {
+  text-align: center;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.signup-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+.signup-box {
+  background: white;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 5px 20px 40px 0px #00000012;
+  text-align: center;
+  width: 100%;
+  max-width: 450px;
+  /* margin-top: 30px; */
+}
+
+.btn-custom {
+  background-color: #5a2d82 !important; /* Purple Button */
+  color: white !important;
+  font-weight: bold !important;
+  padding: 12px !important;
+}
+.btn-custom:hover {
+  background-color: #472267;
+  color: white;
+}
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+.signup_img {
+  margin-top: 30px;
+}
+.signup_img img {
+  height: 520px;
+  object-fit: cover;
+}
+.signup_banner {
+  background-image: url(./Images/signupbanner.jpg);
+  background-size: cover;
+}
+.css-ybdmyu-MuiButtonBase-root-MuiTab-root.Mui-selected {
+  color: white !important;
+}
+
+.css-1x6krcq-MuiButtonBase-root-MuiTab-root.Mui-selected {
+  color: white !important;
+}

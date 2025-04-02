@@ -1,0 +1,18 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.digital_bg_img{
+    background-image: url(../Images/digitalbgimg.jpeg);
+    background-size: cover;
+    height: 100vh;
+}
+.testimonial_bg{
+    background-image: url(../Images/clientbgimg.jpg);
+    background-size: cover;
+    height: 100vh;
+}
+.testimonial_box{
+    background-color: white;
+}
