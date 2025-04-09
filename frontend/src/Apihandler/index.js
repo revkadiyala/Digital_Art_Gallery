@@ -21,7 +21,6 @@ export const getApihandler = async (endPoint) => {
 export const getbyidApihandler = async (endPoint) => {
   try {
     const getres = await axios.get(serverUrl + endPoint);
-    // console.log("getresbyid=>", getres);
     return getres.data;
   } catch (error) {
     return { error };
@@ -47,11 +46,9 @@ export const postLoginApihandler = async (endPoint, value) => {
 };
 
 export const postApihandler = async (endPoint, value) => {
-  console.log("postvalue=>", endPoint);
-  console.log("postvalue=>", value);
   try {
     const postRes = await axios.post(serverUrl + endPoint, value);
-    console.log("apipost=>", postRes);
+
     return postRes.data;
   } catch (error) {
     return { error };

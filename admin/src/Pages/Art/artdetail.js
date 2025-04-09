@@ -9,14 +9,13 @@ import Col from "react-bootstrap/esm/Col";
 export default function ArtDetail() {
   const { id } = useParams(); // Extract the art ID from the URL
   const [data, setData] = useState(null);
-  console.log("art is --->", data);
   useEffect(() => {
     getArtDetails();
   }, []);
 
   const getArtDetails = async () => {
     const res = await getApihandler(`/getArt/${id}`); // Make an API call to get art details
-    console.log("art detail api response is --->", res);
+
     if (res.message === "Success") {
       setData(res.data);
     }

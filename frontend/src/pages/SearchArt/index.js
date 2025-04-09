@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import { getApihandler, getApihandlerByParams } from "../../Apihandler";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
+import { Button } from "@mui/material";
 
 export default function SearchArt() {
   const [searchParams] = useSearchParams(); // Get query params from URL
@@ -18,7 +19,7 @@ export default function SearchArt() {
         const response = await getApihandler(
           `/searchArt?categoryName=${categoryName}&price=${price}`
         );
-        console.log("search api res is -->", response);
+
         if (response?.data) {
           setArts(response.data);
         } else {
@@ -63,6 +64,15 @@ export default function SearchArt() {
                   <p>Artist: {art.artist_name}</p>
                   <p>Category: {art.category}</p>
                   <p>Price: {art.price}</p>
+
+                  <Link to={`/payment/${art._id}`}>
+                    <Button
+                      variant="outlined"
+                      sx={{ border: "2px solid white", color: "white" }}
+                    >
+                      Buy Now
+                    </Button>
+                  </Link>
                 </div>
               </div>
             ))}

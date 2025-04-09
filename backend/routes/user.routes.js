@@ -15,6 +15,8 @@ module.exports = (app)=>{
 
     app.get('/api/searchArt', user.searchArt);
 
+    app.post('/api/buyArt', user.buyArt);   
+
 
 
     // Artist Routes
@@ -27,7 +29,13 @@ module.exports = (app)=>{
 
     app.get('/api/getFollowersByArtistId/:artistId', user.getFollowersByArtistId);
 
+    app.get('/api/getArtistBuyArt/:artist_Id', user.getArtistBuyArt);
 
+    app.post("/api/submitReview", user.submitReview);
+
+    app.get('/api/getArtistReviews/:artistId', user.getArtistReviews);
+
+    app.get('/api/getUserReviews/:userId', user.getUserReviews);
 
     
 }

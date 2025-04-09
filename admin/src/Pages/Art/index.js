@@ -38,9 +38,6 @@ const style = {
 };
 
 export default function Art() {
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
   const [artistName, setArtistName] = useState("");
   const [artName, setArtName] = useState("");
   const [price, setPrice] = useState("");
@@ -53,63 +50,39 @@ export default function Art() {
     setPhotos(Array.from(e.target.files)); // Convert FileList to an array
   };
 
-  // ******** get category api ********
+  // ******* get category api *******
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
-  console.log("select category is --->", selectedCategory);
+
   useEffect(() => {
     getCatgory();
   }, []);
   const getCatgory = async () => {
     const res = await getApihandler("/getAllCategory");
-    console.log("get category api response is ---->", res);
+    console.log("res", res);
+
     if (res.message === "Categories get successfully") {
       setCategories(res.data);
     }
   };
-  const addArt = async () => {
-    const formData = new FormData();
-    formData.append("artist_name", artistName);
-    formData.append("art_name", artName);
-    formData.append("price", price);
-    formData.append("description", description);
-    formData.append("category", selectedCategory);
 
-    photos.forEach((photo) => {
-      formData.append("photos", photo); // Append each file correctly
-    });
-    const res = await postApihandler("/addArt", formData);
-    console.log("add art api response is ---->", res);
-    if (res.message === "Art added successfully") {
-      Swal.fire({
-        icon: "success",
-        text: "Art  added successfully!",
-      });
-      setOpen(false);
-      getArt();
-    }
-  };
-
-  //   ******* get art *********
+  //   ****** get art ********
   const [arts, setArts] = useState([]);
-  console.log("art data is ---->", arts);
   useEffect(() => {
     getArt();
   }, []);
   const getArt = async () => {
     const res = await getApihandler("/getArt");
-    console.log("get art api response is ----->", res);
 
     if (res.message === "Arts retrieved successfully") {
       setArts(res.arts);
     }
   };
 
-  //   ******** delete art **********
+  //   ******* delete art *********
 
   const deleteArt = async (id) => {
     const res = await deleteApihandler(`/deleteArt/${id}`);
-    console.log("delete art api response is ---->", res);
     if (res.message === "Art deleted successfully") {
       Swal.fire({
         icon: "success",
@@ -119,20 +92,22 @@ export default function Art() {
     }
   };
 
-  //   ********* update art **********
+  //   ******** update art *********
 
   const [open1, setOpen1] = React.useState(false);
   const handleOpen1 = () => setOpen1(true);
   const handleClose1 = () => setOpen1(false);
   useEffect(() => {
-    if (index !== null && arts[index]) {
-      const { artistName, artName, price, description } = arts[index] || {};
-      setArtistName(artistName || "");
-      setArtName(artName || "");
+    if (index !== "") {
+      const { artist_name, art_name, price, description, category } =
+        arts[index] || {};
+      setArtistName(artist_name || "");
+      setArtName(art_name || "");
       setPrice(price || "");
       setDescription(description || "");
+      setSelectedCategory(category || "");
     }
-  }, [index, arts]);
+  }, [index]);
   const updateArt = async () => {
     const formData = new FormData();
     formData.append("artist_name", artistName);
@@ -145,7 +120,6 @@ export default function Art() {
       formData.append("photos", photo); // Append each file correctly
     });
     const res = await putApihandler(`/updateArt/${artid}`, formData);
-    console.log("update api response is ---->", res);
     if (res.message === "Art updated successfully") {
       Swal.fire({
         icon: "success",
@@ -155,82 +129,33 @@ export default function Art() {
       getArt();
     }
   };
+
+  // ******* handle status api *******
+  const handleUpdateStatus = async (artId, currentStatus) => {
+    const data = {
+      artId: artId,
+      status: currentStatus,
+    };
+    const res = await postApihandler("/updateArtStatus", data);
+    console.log("res", res);
+
+    if (res.art) {
+      Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: "Art status updated successfully!",
+      });
+      getArt(); // Refresh the art list
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: res.message || "Failed to update status",
+      });
+    }
+  };
   return (
     <AdminLayout>
-      <div style={{ textAlign: "left" }}>
-        <Button variant="outlined" onClick={handleOpen}>
-          Add Art
-        </Button>
-      </div>
-      {/* ******** add art ********* */}
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <h6>Add Art</h6>
-          <TextField
-            label="Artist Name"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            value={artistName}
-            onChange={(e) => setArtistName(e.target.value)}
-          />
-          <TextField
-            label="Art Name"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            value={artName}
-            onChange={(e) => setArtName(e.target.value)}
-          />
-          <TextField
-            label="Price"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-          />
-          <TextField
-            label="Description"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-          <div className="mt-4">
-            <input type="file" multiple onChange={handleFileChange} />
-          </div>
-          <div className="mt-4">
-            <label>Select Category</label>
-            <div className="mt-3">
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="form-control"
-              >
-                <option value="">Select a category</option>
-                {categories.map((category) => (
-                  <option
-                    key={category.category_name}
-                    value={category.category_name}
-                  >
-                    {category.category_name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-          <Button variant="contained" className="mt-3" onClick={addArt}>
-            Add Art
-          </Button>
-        </Box>
-      </Modal>
       <TableContainer component={Paper} className="mt-4">
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -242,10 +167,11 @@ export default function Art() {
               <TableCell>Category</TableCell>
               <TableCell>Photos</TableCell>
               <TableCell>Action</TableCell>
+              <TableCell>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {arts.map((art) => (
+            {arts.map((art, index) => (
               <TableRow
                 key={art.art_name}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -301,14 +227,41 @@ export default function Art() {
                     <VisibilityIcon />
                   </Link>
                 </TableCell>
+                <TableCell>
+                  {art.status === 1 ? (
+                    <Button
+                      variant="contained" // Changed from "outlined" to "contained" for better visibility
+                      color="error"
+                      onClick={() => handleUpdateStatus(art._id, 0)}
+                      sx={{
+                        fontWeight: "bold",
+                        textTransform: "none",
+                      }}
+                    >
+                      Inactive
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      color="success"
+                      onClick={() => handleUpdateStatus(art._id, 1)}
+                      sx={{
+                        fontWeight: "bold",
+                        textTransform: "none",
+                      }}
+                    >
+                      Active
+                    </Button>
+                  )}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
 
-      {/* ********* update art ************ */}
-      {/* <Button onClick={handleOpen1}>Open modal</Button> */}
+      {/* {/ ******** update art *********** /} */}
+
       <Modal
         open={open1}
         onClose={handleClose1}

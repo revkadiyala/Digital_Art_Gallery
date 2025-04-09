@@ -1,7 +1,7 @@
 /** @format */
 
 import React, { useState } from "react";
-import signupimg from "../../Images/pexels-photo-4238493.jpeg";
+
 import { postApihandler } from "../../Apihandler";
 import { useNavigate } from "react-router-dom";
 import swal from "sweetalert";
@@ -11,8 +11,7 @@ import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import { Button } from "@mui/material";
-import GoogleIcon from "@mui/icons-material/Google";
-import FacebookIcon from "@mui/icons-material/Facebook";
+
 export default function Login() {
   const [value, setValue] = React.useState("1");
 
@@ -180,33 +179,6 @@ export default function Login() {
                         </a>{" "}
                         Here...!!!
                       </p>
-                      <div className="mt-4">
-                        <Button
-                          variant="outlined"
-                          startIcon={<GoogleIcon />}
-                          sx={{
-                            backgroundColor: "#5a2d82",
-                            color: "white",
-                            border: "none",
-                            padding: "7px 20px",
-                          }}
-                        >
-                          Login With Google
-                        </Button>
-                      </div>
-                      <div className="mt-3">
-                        <Button
-                          variant="outlined"
-                          startIcon={<FacebookIcon />}
-                          sx={{
-                            backgroundColor: "#5a2d82",
-                            color: "white",
-                            border: "none",
-                          }}
-                        >
-                          Login With Facebook
-                        </Button>
-                      </div>
                     </form>
                   </div>
                 </TabPanel>

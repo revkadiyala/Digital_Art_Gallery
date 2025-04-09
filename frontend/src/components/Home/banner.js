@@ -7,6 +7,8 @@ import "../../Css/home.css";
 import { Box, Modal, TextField } from "@mui/material";
 import { getApihandler, postApihandler } from "../../Apihandler";
 import Swal from "sweetalert2";
+import swal from "sweetalert";
+
 import { AddCircle } from "@mui/icons-material";
 import { Link, useNavigate } from "react-router-dom";
 // import { Button } from "@mui/material";
@@ -32,7 +34,11 @@ export default function Banner() {
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
   const [photos, setPhotos] = useState([]);
+  const [addedby, setAddedBy] = useState("Vendor");
   const [isArtistLoggedIn, setIsArtistLoggedIn] = useState(false);
+  const userData = JSON.parse(localStorage.getItem("userData"));
+  console.log("userdata", userData);
+  const artistid = userData._id;
 
   const handleFileChange = (e) => {
     setPhotos(Array.from(e.target.files)); // Convert FileList to an array
@@ -62,12 +68,13 @@ export default function Banner() {
 
   const addArt = async () => {
     const formData = new FormData();
+    formData.append("artistId", artistid);
     formData.append("artist_name", artistName);
     formData.append("art_name", artName);
     formData.append("price", price);
     formData.append("description", description);
     formData.append("category", selectedCategory);
-
+    formData.append("addedBy", addedby);
     photos.forEach((photo) => {
       formData.append("photos", photo); // Append each file correctly
     });
@@ -79,7 +86,12 @@ export default function Banner() {
         text: "Art  added successfully!",
       });
       setOpen(false);
-      // getArt();
+    } else {
+      swal(
+        "Error",
+        res.error.response.data.error || "An unknown error occurred.",
+        "error"
+      );
     }
   };
 
@@ -171,9 +183,21 @@ export default function Banner() {
                     variant="outlined"
                     fullWidth
                     margin="normal"
+                    type="number"
                     value={price}
                     onChange={(e) => setPrice(e.target.value)}
-                    sx={{ backgroundColor: "#fff", borderRadius: "5px" }}
+                    sx={{
+                      backgroundColor: "#fff",
+                      borderRadius: "5px",
+                      "& input[type=number]": {
+                        MozAppearance: "textfield",
+                      },
+                      "& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button":
+                        {
+                          WebkitAppearance: "none",
+                          margin: 0,
+                        },
+                    }}
                   />
                   <select
                     value={selectedCategory}
@@ -241,6 +265,19 @@ export default function Banner() {
               margin="normal"
               value={artistName}
               onChange={(e) => setArtistName(e.target.value)}
+            />
+            <TextField
+              label="Added By"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              value={addedby}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value === "Admin" || value === "Vendor" || value === "") {
+                  setAddedBy(value);
+                }
+              }}
             />
             <TextField
               label="Art Name"

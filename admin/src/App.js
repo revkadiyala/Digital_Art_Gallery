@@ -9,6 +9,10 @@ import Users from "./Pages/Users";
 import Art from "./Pages/Art";
 import ArtDetail from "./Pages/Art/artdetail";
 import Category from "./Pages/Category";
+import Artist from "./Pages/Artist";
+import BookedArts from "./Pages/Art/bookedarts";
+import Reviews from "./Pages/Reviews";
+import ArtCommission from "./Pages/Art/artcommission";
 function App() {
   return (
     <div className="App">
@@ -21,6 +25,10 @@ function App() {
           <Route path="/arts" element={<Art />} />
           <Route path="/artdetail/:id" element={<ArtDetail />} />
           <Route path="/category" element={<Category />} />
+          <Route path="/artist" element={<Artist />} />
+          <Route path="/bookedarts" element={<BookedArts />} />
+          <Route path="/reviews" element={<Reviews />} />
+          <Route path="/commission" element={<ArtCommission />} />
         </Routes>
       </BrowserRouter>
     </div>

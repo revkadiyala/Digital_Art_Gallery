@@ -6,6 +6,8 @@ const ObjectId = require('mongodb').ObjectID;
 const user = require('../models/user.model');
 const artist = require('../models/artist.model');
 const Art = require('../models/art.model');
+const buyArt = require('../models/buyArt.model')
+const Review = require('../models/review.model')
 
 function generateToken(userid) {
     return jwt.sign({ id: userid }, config.secret, { expiresIn: 15552000 });
@@ -418,6 +420,8 @@ exports.followArtist = async (req, res) => {
 };
 
 
+
+
 exports.getFollowersByUserId = async (req, res) => {
   try {
       const { userId } = req.params;
@@ -472,7 +476,9 @@ exports.searchArt = async (req, res) => {
       const { category, price } = req.query;
 
       // Create a search filter
-      let filter = {};
+      let filter = {
+        status: 1 // Only show active arts
+      };
 
       if (category) {
           filter.category = { $regex: category, $options: 'i' }; // Case-insensitive search
@@ -494,6 +500,201 @@ exports.searchArt = async (req, res) => {
         message: "Art fetched successfully", 
         status: 200 
       });
+  } catch (error) {
+      return res.status(500).json({ message: "Server error.", error: error.message });
+  }
+};
+
+
+exports.buyArt = async (req, res) => {
+  try {
+      const { user_Id, art_Id, cardNumber, expiryMonth, expiryYear, cvv, cardHolderName } = req.body;
+      
+      if (!user_Id || !art_Id || !cardNumber || !expiryMonth || !expiryYear || !cvv || !cardHolderName) {
+          return res.status(400).json({ message: "User ID, Art ID, and Card Details are required." });
+      }
+
+      // Find Art Details
+      const art = await Art.findById(art_Id);
+      if (!art) {
+          return res.status(404).json({ message: "Art not found." });
+      }
+
+      // Find User
+      const userData = await user.findById(user_Id);
+      if (!userData) {
+          return res.status(404).json({ message: "User not found." });
+      }
+
+      // Store Purchase in Database
+      const newPurchase = new buyArt({
+          user_Id,
+          art_Id,
+          cardDetails: {
+              cardNumber: cardNumber.slice(-4), // Store only last 4 digits
+              expiryMonth,
+              expiryYear,
+              cardHolderName
+          },
+          price: art.price,
+          paymentStatus: "Completed",
+          deleteFlag: false
+      });
+
+      await newPurchase.save();
+
+      return res.status(200).json({
+          message: "Purchase successful!",
+          artDetails: {
+              _id: art._id,
+              art_name: art.art_name,
+              price: art.price
+          },
+          purchaseDetails: newPurchase,
+          status: 200 
+      });
+
+  } catch (error) {
+      return res.status(500).json({ message: "Server error.", error: error.message });
+  }
+};
+
+
+exports.getArtistBuyArt = async (req, res) => {
+  try {
+      const { artist_Id } = req.params;
+
+      if (!artist_Id) {
+          return res.status(400).json({ message: "Artist ID is required." });
+      }
+
+      // Find all artworks added by this artist
+      // const artistArts = await Art.find({ artistId: artist_Id, addedBy: "Vendor" }).select('_id');
+      const artistArts = await Art.find({ artistId: artist_Id }).select('_id');
+
+      if (!artistArts.length) {
+          return res.status(404).json({ message: "No artworks found for this artist." });
+      }
+
+      // Extract all matching art IDs
+      const artIds = artistArts.map(art => art._id);
+
+      // Find all purchases related to these artworks
+      const purchases = await buyArt.find({ art_Id: { $in: artIds } })
+          .populate('art_Id', 'art_name price') // Get art details
+          .populate('user_Id', 'user_FullName') // Get user details
+          .exec();
+
+      return res.status(200).json({
+          data: purchases,
+          message: "Artist's purchase records fetched successfully.",
+          status: 200
+      });
+
+  } catch (error) {
+      return res.status(500).json({ message: "Server error.", error: error.message });
+  }
+};
+
+
+
+exports.submitReview = async (req, res) => {
+  try {
+      const { userId, artId, rating, reviewText } = req.body;
+
+      if (!userId || !artId || !rating || !reviewText) {
+          return res.status(400).json({ message: "All fields are required." });
+      }
+
+      // Check if user has purchased the artwork
+      const purchase = await buyArt.findOne({ user_Id: userId, art_Id: artId });
+
+      if (!purchase) {
+          return res.status(403).json({ message: "You can only review purchased artworks." });
+      }
+
+      // Check if the user has already reviewed this artwork
+      const existingReview = await Review.findOne({ userId, artId });
+      if (existingReview) {
+          return res.status(400).json({ message: "You have already reviewed this artwork." });
+      }
+
+      // Save review in the database
+      const newReview = new Review({
+          userId,
+          artId,
+          buyArtId: purchase._id, // ✅ Store the related purchase
+          rating,
+          reviewText
+      });
+
+      await newReview.save();
+
+      return res.status(201).json({
+          review: newReview,
+          message: "Review submitted successfully!",
+          status: 200
+      });
+
+  } catch (error) {
+      return res.status(500).json({ message: "Server error.", error: error.message });
+  }
+};
+
+
+// for Artist
+exports.getArtistReviews = async (req, res) => {
+  try {
+      const { artistId } = req.params;
+
+      if (!artistId) {
+          return res.status(400).json({ message: "Artist ID is required." });
+      }
+
+      // Find all arts created by the artist
+      const artistArts = await Art.find({ artistId }).select("_id");
+      const artistArtIds = artistArts.map(art => art._id);
+
+      // Find all reviews related to those arts
+      const reviews = await Review.find({ artId: { $in: artistArtIds } })
+          .populate("userId", "user_FullName email") // Fetch user details
+          .populate("artId", "art_name artistId") // Fetch art details
+          .populate("buyArtId", "_id") // Include buyArt reference
+          .exec();
+
+      return res.status(200).json({
+        data: reviews,
+          message: "Artist's reviews fetched successfully.",
+          status: 200
+      });
+
+  } catch (error) {
+      return res.status(500).json({ message: "Server error.", error: error.message });
+  }
+};
+
+
+// for User
+exports.getUserReviews = async (req, res) => {
+  try {
+      const { userId } = req.params;
+
+      if (!userId) {
+          return res.status(400).json({ message: "User ID is required." });
+      }
+
+      // Fetch reviews submitted by the user
+      const reviews = await Review.find({ userId })
+          .populate("artId", "art_name artistId") // Fetch art details
+          .populate("buyArtId", "_id") // Include buyArt reference
+          .exec();
+
+      return res.status(200).json({
+          data: reviews,
+          message: "User's reviews fetched successfully.",
+          status: 200
+      });
+
   } catch (error) {
       return res.status(500).json({ message: "Server error.", error: error.message });
   }

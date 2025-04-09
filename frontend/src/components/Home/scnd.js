@@ -10,7 +10,7 @@ import { Button } from "@mui/material";
 
 export default function Scnd() {
   const [arts, setArts] = useState([]);
-  // console.log("arts data ---->", arts);
+
   const navigate = useNavigate();
   useEffect(() => {
     getArts();

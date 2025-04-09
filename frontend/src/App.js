@@ -12,6 +12,10 @@ import AllArt from "./pages/AllArt";
 import MyArts from "./pages/AllArt/myarts";
 import SearchArt from "./pages/SearchArt";
 import MyFollowers from "./pages/Artist/myfollowers";
+import Payment from "./pages/Payment";
+import BuyArts from "./pages/AllArt/buyarts";
+import Reviews from "./pages/Reviews";
+import SellArts from "./pages/AllArt/sellarts";
 
 function App() {
   return (
@@ -28,6 +32,10 @@ function App() {
           <Route path="/myarts" element={<MyArts />} />
           <Route path="/searcharts" element={<SearchArt />} />
           <Route path="/myfollowers" element={<MyFollowers />} />
+          <Route path="/payment/:id" element={<Payment />} />
+          <Route path="/buyarts" element={<BuyArts />} />
+          <Route path="/sellarts" element={<SellArts />} />
+          <Route path="/reviews" element={<Reviews />} />
         </Routes>
       </BrowserRouter>
     </div>

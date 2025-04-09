@@ -10,8 +10,7 @@ import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
-import GoogleIcon from "@mui/icons-material/Google";
-import FacebookIcon from "@mui/icons-material/Facebook";
+
 import { Button } from "@mui/material";
 const countryCodeList = [
   {
@@ -1230,18 +1229,10 @@ const countryCodeList = [
 export default function Signup() {
   const navigate = useNavigate();
   const [name, setName] = useState("");
-  // console.log("name is --->", name);
-
   const [email, setEmail] = useState("");
-  // console.log("email is --->", email);
-
   const [password, setPassword] = useState("");
-  // console.log("password is --->", password);
-
   const [confirmpassword, setConfirmPassword] = useState("");
-  // console.log("confirmpassword is --->", confirmpassword);
   const [phonenumber, setphonenumber] = useState("");
-
   const [country_code, setCountryCode] = React.useState();
   const userSignup = async (e) => {
     e.preventDefault();
@@ -1254,49 +1245,16 @@ export default function Signup() {
       mobile_no: phonenumber,
       country_code: country_code,
     };
-
-    console.log("Signup data is ---->", data);
-
-    try {
-      const res = await postApihandler("/userSignup", data);
-      console.log("Signup API response is ----->", res);
-
-      if (res.status === 200) {
-        swal("Success", "Successfully Signed Up!", "success");
-        navigate("/");
-      } else if (res.status === 400) {
-        swal(
-          "Error",
-          res.error.response.data.message ||
-            "Bad Request. Please check your details.",
-          "error"
-        );
-      } else if (res.status === 401) {
-        swal(
-          "Unauthorized",
-          "You are not authorized to perform this action.",
-          "warning"
-        );
-      } else if (res.status === 500) {
-        swal(
-          "Server Error",
-          "Something went wrong. Please try again later.",
-          "error"
-        );
-      } else {
-        swal(
-          "Error",
-          res.error.response.data.message || "An unknown error occurred.",
-          "error"
-        );
-      }
-    } catch (error) {
+    const res = await postApihandler("/userSignup", data);
+    if (res.status === 200) {
+      swal("Success", "Successfully Signed Up!", "success");
+      navigate("/");
+    } else {
       swal(
-        "Network Error",
-        "Failed to connect to the server. Please try again later.",
+        "Error",
+        res.error.response.data.message || "An unknown error occurred.",
         "error"
       );
-      console.error("Error during signup:", error);
     }
   };
 
@@ -1325,44 +1283,16 @@ export default function Signup() {
       mobile_no: artistnumber,
       country_code: artistcountrycode,
     };
-
-    console.log("Signup data is ---->", data);
-
-    try {
-      const res = await postApihandler("/artistSignup", data);
-      console.log("Signup API response is ----->", res);
-
-      if (res.status === 200) {
-        swal("Success", "Successfully Signed Up!", "success");
-        navigate("/");
-      } else if (res.status === 400) {
-        swal(
-          "Error",
-          res.message || "Bad Request. Please check your details.",
-          "error"
-        );
-      } else if (res.status === 401) {
-        swal(
-          "Unauthorized",
-          "You are not authorized to perform this action.",
-          "warning"
-        );
-      } else if (res.status === 500) {
-        swal(
-          "Server Error",
-          "Something went wrong. Please try again later.",
-          "error"
-        );
-      } else {
-        swal("Error", res.message || "An unknown error occurred.", "error");
-      }
-    } catch (error) {
+    const res = await postApihandler("/artistSignup", data);
+    if (res.status === 200) {
+      swal("Success", "Successfully Signed Up!", "success");
+      navigate("/");
+    } else {
       swal(
-        "Network Error",
-        "Failed to connect to the server. Please try again later.",
+        "Error",
+        res.error.response.data.message || "An unknown error occurred.",
         "error"
       );
-      console.error("Error during signup:", error);
     }
   };
   return (
@@ -1430,9 +1360,6 @@ export default function Signup() {
                         />
                       </div>
                       <div className="mb-4">
-                        {/* <Typography sx={{ textAlign: "start", fontSize: "20px" }}>
-                      Mobile
-                    </Typography> */}
                         <div className="row">
                           <div className="col-md-5">
                             <select
@@ -1503,33 +1430,6 @@ export default function Signup() {
                           Login
                         </a>
                       </p>
-                      <div className="mt-4">
-                        <Button
-                          variant="outlined"
-                          startIcon={<GoogleIcon />}
-                          sx={{
-                            backgroundColor: "#5a2d82",
-                            color: "white",
-                            border: "none",
-                            padding: "7px 20px",
-                          }}
-                        >
-                          Login With Google
-                        </Button>
-                      </div>
-                      <div className="mt-3">
-                        <Button
-                          variant="outlined"
-                          startIcon={<FacebookIcon />}
-                          sx={{
-                            backgroundColor: "#5a2d82",
-                            color: "white",
-                            border: "none",
-                          }}
-                        >
-                          Login With Facebook
-                        </Button>
-                      </div>
                     </form>
                   </div>
                 </TabPanel>
@@ -1558,9 +1458,6 @@ export default function Signup() {
                         />
                       </div>
                       <div className="mb-4">
-                        {/* <Typography sx={{ textAlign: "start", fontSize: "20px" }}>
-                      Mobile
-                    </Typography> */}
                         <div className="row">
                           <div className="col-md-5">
                             <select

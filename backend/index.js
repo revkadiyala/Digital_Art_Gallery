@@ -2,7 +2,7 @@ const express = require('express')
  const cors = require('cors')
 const app = express()
 const bodyParser = require('body-parser');
-const path = require('path');
+const path = require('path')
 
 const http = require('http');
 const https = require('https');
@@ -47,11 +47,14 @@ require('./routes/admin.routes')(app)
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'website')));
 app.use(express.static(path.join(__dirname, 'website/out')))
-
+// app.use((req, res) => {
+//     res.sendFile(path.join(__dirname, 'index.html'));
+// });
 
 app.get('/',function(req,res){
     res.sendFile(path.join(__dirname+'website/out','/index.html'));
-});
+    //__dirname : It will resolve to your project folder.
+  });
 
  
 
@@ -71,5 +74,19 @@ app.listen(80, () => {
     console.log("Server Started on port 80")
 });
 
+
+var fs = require('fs');
+
+// var key = fs.readFileSync('private.key');
+// var cert = fs.readFileSync('certificate.crt');
+// var ca = fs.readFileSync('ca_bundle.crt');
+
+var options = {
+//   key: key,
+//   cert: cert,
+//   ca: ca,
+  requestCert: false,
+  rejectUnauthorized: false
+};
 
 

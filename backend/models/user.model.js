@@ -25,6 +25,11 @@ const userSchema = new Schema({
         required: [true, "please enter password"]
     },
 
+    // fcm_token:{
+    //     type:String,
+    //     default:''
+    // },
+
     isActive: {
         type: Boolean,
         default: true

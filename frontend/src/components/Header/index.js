@@ -5,6 +5,7 @@ import Navbar from "react-bootstrap/Navbar";
 import digitallogo from "../../Images/digitalartlogo.avif";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useNavigate } from "react-router-dom";
+
 export default function Header() {
   const [role, setRole] = useState();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -75,6 +76,30 @@ export default function Header() {
                   My Arts
                 </Nav.Link>
               )}
+              {role === "user" && (
+                <Nav.Link
+                  href="/buyarts"
+                  style={{
+                    color: "#282828",
+                    fontWeight: "600",
+                    padding: "5px 20px",
+                  }}
+                >
+                  Purchased Arts
+                </Nav.Link>
+              )}
+              {role === "artist" && (
+                <Nav.Link
+                  href="/sellarts"
+                  style={{
+                    color: "#282828",
+                    fontWeight: "600",
+                    padding: "5px 20px",
+                  }}
+                >
+                  Sold Arts
+                </Nav.Link>
+              )}
             </Nav>
           </Navbar.Collapse>
 
@@ -85,8 +110,14 @@ export default function Header() {
             {isLoggedIn ? (
               <>
                 <NavDropdown.Item href="/profile">My Profile</NavDropdown.Item>
-                <NavDropdown.Item href="/myfollowers">
-                  My Followers
+                {role === "artist" && (
+                  <NavDropdown.Item href="/myfollowers">
+                    My Followers
+                  </NavDropdown.Item>
+                )}
+
+                <NavDropdown.Item href="/reviews">
+                  Reviews & Ratings
                 </NavDropdown.Item>
 
                 <NavDropdown.Item onClick={handleLogout}>

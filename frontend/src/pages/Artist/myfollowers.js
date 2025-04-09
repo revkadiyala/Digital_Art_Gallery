@@ -4,7 +4,8 @@ import { getApihandler } from "../../Apihandler";
 
 export default function MyFollowers() {
   const [data, setData] = useState([]);
-  console.log("data is --->", data);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const check = localStorage.getItem("check");
 
@@ -19,6 +20,7 @@ export default function MyFollowers() {
     try {
       const userData = JSON.parse(localStorage.getItem("userData"));
       const userid = userData._id;
+
       const res = await getApihandler(`/getFollowersByUserId/${userid}`);
 
       if (res?.following) {
@@ -29,6 +31,8 @@ export default function MyFollowers() {
     } catch (error) {
       console.error("Error fetching user followers:", error);
       setData([]);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -36,42 +40,54 @@ export default function MyFollowers() {
     try {
       const userData = JSON.parse(localStorage.getItem("userData"));
       const artistid = userData._id;
+
       const res = await getApihandler(`/getFollowersByArtistId/${artistid}`);
 
-      if (res?.following) {
-        setData(res.following);
+      if (res.status === 200) {
+        setData(res.followers);
       } else {
         setData([]);
       }
     } catch (error) {
       console.error("Error fetching artist followers:", error);
       setData([]);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <>
       <Header />
-      <div className="container">
+      <div className="container mt-4">
         <div className="row">
-          {data && data.length >= 0 ? (
+          {loading ? (
+            <p>Loading followers...</p>
+          ) : data && data.length > 0 ? (
             data.map((follower) => (
-              <div className="col-2">
+              <div key={follower._id} className="col-md-3 col-sm-6 mb-4">
                 <div
-                  key={follower._id}
                   style={{
                     boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
                     padding: "20px",
                     borderRadius: "8px",
+                    textAlign: "center",
+                    backgroundColor: "#fff",
                   }}
                 >
-                  <h5> {follower.user_FullName}</h5>
-                  <p> {follower.user_Email}</p>
+                  <h5 style={{ fontWeight: "600" }}>
+                    {follower.user_FullName || "No Name"}
+                  </h5>
+                  <p style={{ fontSize: "14px", color: "#666" }}>
+                    {follower.user_Email || "No Email"}
+                  </p>
                 </div>
               </div>
             ))
           ) : (
-            <p>No followers found.</p>
+            <div className="col-12 text-center">
+              <p>No followers found.</p>
+            </div>
           )}
         </div>
       </div>

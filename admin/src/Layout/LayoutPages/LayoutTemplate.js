@@ -17,12 +17,12 @@ import Link from "@mui/material/Link";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+
 import NestedList from "./NestedList";
 import { alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 import { Button } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-
 
 const drawerWidth = 240;
 
@@ -129,8 +129,8 @@ export default function LayoutTemplate({ children }) {
           position="absolute"
           open={open}
           className="bg-yellow-ping-grad"
-          elevation={0} // Removes default shadow
-          sx={{ boxShadow: "none" }} // Ensures no box shadow
+          elevation={0}
+          sx={{ boxShadow: "none" }}
         >
           <Toolbar
             sx={{
@@ -166,7 +166,6 @@ export default function LayoutTemplate({ children }) {
               >
                 Admin
               </Button>
-             
             </div>
           </Toolbar>
         </AppBar>
@@ -200,7 +199,6 @@ export default function LayoutTemplate({ children }) {
                 ? theme.palette.grey[100]
                 : theme.palette.grey[900],
             flexGrow: 1,
-            // height: "100vh",
             overflow: "auto",
           }}
         >

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import AdminLayout from "../../Layout/AdminLayout";
 import { getApihandler } from "../../Apihandler";
-import { Link } from "react-router-dom"; // Import Link
+
 
 export default function Dashboard() {
   const [counts, setCounts] = useState({
@@ -18,10 +18,10 @@ export default function Dashboard() {
   const fetchCounts = async () => {
     try {
       const response = await getApihandler("/getAllCount");
-      console.log("response", response);
-
+      console.log("response",response);
+      
       if (response.success === true) {
-        setCounts(response.data);
+        setCounts(response.data)
       }
     } catch (error) {
       console.error("Error fetching counts:", error);
@@ -32,29 +32,18 @@ export default function Dashboard() {
     <AdminLayout>
       <h1>Dashboard</h1>
       <div style={{ display: "flex", gap: "20px", marginTop: "20px" }}>
-        <Link
-          to="/users" // Link to Users page
-          style={{ textDecoration: "none" }} // Optionally remove underline
+        <div
+          style={{
+            background: "#f8d7da",
+            padding: "20px",
+            borderRadius: "10px",
+            textAlign: "center",
+            width: "200px",
+          }}
         >
-          <div
-            style={{
-              background: "#f8d7da",
-              padding: "20px",
-              borderRadius: "10px",
-              textAlign: "center",
-              width: "200px",
-            }}
-          >
-            <h3>{counts.users}</h3>
-            <p>Users</p>
-          </div>
-          
-        </Link>
-
-        <Link
-          to="/arts" // Link to Arts page
-          style={{ textDecoration: "none" }} // Optionally remove underline
-        >
+          <h3>{counts.users}</h3>
+          <p>Users</p>
+        </div>
         <div
           style={{
             background: "#d4edda",
@@ -66,9 +55,7 @@ export default function Dashboard() {
         >
           <h3>{counts.arts}</h3>
           <p>Arts</p>
-            </div>
-            </Link>
-
+        </div>
         <div
           style={{
             background: "#cce5ff",
@@ -80,13 +67,7 @@ export default function Dashboard() {
         >
           <h3>{counts.artists}</h3>
           <p>Artists</p>
-          </div>
-        
-        <Link
-          to="/category" // Link to categories page
-          style={{ textDecoration: "none" }} // Optionally remove underline
-        >
-
+        </div>
         <div
           style={{
             background: "#fff3cd",
@@ -98,10 +79,8 @@ export default function Dashboard() {
         >
           <h3>{counts.categories}</h3>
           <p>Categories</p>
-          </div>
-           </Link>
+        </div>
       </div>
-     
     </AdminLayout>
   );
 }

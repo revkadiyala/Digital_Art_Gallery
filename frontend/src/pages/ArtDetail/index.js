@@ -8,7 +8,7 @@ import { getApihandler } from "../../Apihandler";
 export default function ArtDetail() {
   const { id } = useParams();
   const [art, setArt] = useState("");
-  console.log("get ar is ---->", art);
+
   useEffect(() => {
     getArtDetail();
   }, []);
