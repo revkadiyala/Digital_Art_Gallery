@@ -36,7 +36,6 @@ export default function BuyArts() {
     const userData = JSON.parse(localStorage.getItem("userData"));
     const userid = userData._id;
     const res = await getApihandler(`/getBuyArtByUserId/${userid}`);
-
     if (res.status === 200) {
       setBuyArts(res.data);
     }

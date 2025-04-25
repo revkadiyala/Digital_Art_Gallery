@@ -161,7 +161,9 @@ export default function Login() {
                           </label>
                         </div>
                         <div>
-                          <p>Forgot Password</p>
+                          <a href="/forgotpassword">
+                            <p>Forgot Password</p>
+                          </a>
                         </div>
                       </div>
 
@@ -230,7 +232,9 @@ export default function Login() {
                           </label>
                         </div>
                         <div>
-                          <p>Forgot Password</p>
+                          <a href="/artistforgotpssword">
+                            <p>Forgot Password</p>
+                          </a>
                         </div>
                       </div>
 

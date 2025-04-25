@@ -14,6 +14,7 @@ export default function SearchArt() {
       setLoading(true);
       const categoryName = searchParams.get("category") || "";
       const price = searchParams.get("price") || "";
+      console.log("price is --->", price);
 
       try {
         const response = await getApihandler(

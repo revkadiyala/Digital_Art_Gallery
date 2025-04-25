@@ -80,7 +80,6 @@ export default function Artist() {
     if (index !== null && data[index]) {
       const { user_FullName, country_code, mobile_no } = data[index] || {};
       setName(user_FullName || "");
-
       setCountryCode(country_code || "");
       setMobileNumber(mobile_no || "");
     }

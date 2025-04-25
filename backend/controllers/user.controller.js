@@ -699,3 +699,146 @@ exports.getUserReviews = async (req, res) => {
       return res.status(500).json({ message: "Server error.", error: error.message });
   }
 };
+
+
+
+
+exports.userEmailVerify = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    // Validate email input
+    if (!email) {
+      return res
+        .status(400)
+        .json({ message: "Email is required", status: 400 });
+    }
+
+    // Search for user with that email
+    const existingUser = await user.findOne({ user_Email: email });
+
+    if (!existingUser) {
+      return res.status(404).json({ message: "Email not found", status: 404 });
+    }
+
+    // Optional: return user data (or just confirmation)
+    return res.status(200).json({
+      message: "Email exists",
+      userId: existingUser._id,
+      userName: existingUser.user_Name,
+      status: 200,
+    });
+  } catch (error) {
+    console.error("Error in userEmailVerify:", error);
+    return res.status(500).json({ message: error.message, status: 500 });
+  }
+};
+
+exports.updateUserPassword = async (req, res) => {
+  try {
+    const { email, newPassword } = req.body;
+
+    // Validate inputs
+    if (!email || !newPassword) {
+      return res
+        .status(400)
+        .json({ message: "Email and new password are required", status: 400 });
+    }
+
+    // Find the user by email
+    const userData = await user.findOne({ user_Email: email });
+
+    if (!userData) {
+      return res
+        .status(404)
+        .json({ message: "User not found with this email", status: 404 });
+    }
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update the password
+    userData.password = hashedPassword;
+    await userData.save();
+
+    return res
+      .status(200)
+      .json({ message: "Password updated successfully", status: 200 });
+  } catch (error) {
+    console.error("Error updating password:", error);
+    return res.status(500).json({ message: error.message, status: 500 });
+  }
+};
+
+exports.artistEmailVerify = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    // Validate email input
+    if (!email) {
+      return res
+        .status(400)
+        .json({ message: "Email is required", status: 400 });
+    }
+
+    // Search for artist with that email
+    const existingArtist = await artist.findOne({
+      user_Email: email.toLowerCase(),
+    });
+
+    if (!existingArtist) {
+      return res
+        .status(404)
+        .json({ message: "Artist email not found", status: 404 });
+    }
+
+    // Return Artist data (or just confirmation)
+    return res.status(200).json({
+      message: "Artist email exists",
+      userId: existingArtist._id,
+      userName: existingArtist.user_Name,
+      status: 200,
+    });
+  } catch (error) {
+    console.error("Error in artistEmailVerify:", error);
+    return res.status(500).json({ message: error.message, status: 500 });
+  }
+};
+
+exports.updateArtistPassword = async (req, res) => {
+  try {
+    const { email, newPassword } = req.body;
+
+    // Validate inputs
+    if (!email || !newPassword) {
+      return res
+        .status(400)
+        .json({ message: "Email and new password are required", status: 400 });
+    }
+
+    // Find the artist by email
+    const artistData = await artist.findOne({
+      user_Email: email.toLowerCase(),
+    });
+
+    if (!artistData) {
+      return res
+        .status(404)
+        .json({ message: "Artist not found with this email", status: 404 });
+    }
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update the password
+    artistData.password = hashedPassword;
+    await artistData.save();
+
+    return res
+      .status(200)
+      .json({ message: "Artist password updated successfully", status: 200 });
+  } catch (error) {
+    console.error("Error updating artist password:", error);
+    return res.status(500).json({ message: error.message, status: 500 });
+  }
+};

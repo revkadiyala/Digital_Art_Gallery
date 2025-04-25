@@ -16,6 +16,10 @@ import Payment from "./pages/Payment";
 import BuyArts from "./pages/AllArt/buyarts";
 import Reviews from "./pages/Reviews";
 import SellArts from "./pages/AllArt/sellarts";
+import ForgotPassword from "./pages/Forgot password/forgotpassword";
+import ResetPassword from "./pages/Forgot password/resetpassword";
+import ArtistForgotPassword from "./pages/Forgot password/artistforgotpassword";
+import ArtistResetPassword from "./pages/Forgot password/artistresetpassword";
 
 function App() {
   return (
@@ -36,6 +40,16 @@ function App() {
           <Route path="/buyarts" element={<BuyArts />} />
           <Route path="/sellarts" element={<SellArts />} />
           <Route path="/reviews" element={<Reviews />} />
+          <Route path="/forgotpassword" element={<ForgotPassword />} />
+          <Route path="/reset-passwrod" element={<ResetPassword />} />
+          <Route
+            path="/artistforgotpssword"
+            element={<ArtistForgotPassword />}
+          />
+          <Route
+            path="/artist-reset-password"
+            element={<ArtistResetPassword />}
+          />
         </Routes>
       </BrowserRouter>
     </div>

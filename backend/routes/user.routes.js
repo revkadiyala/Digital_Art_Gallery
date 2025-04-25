@@ -37,5 +37,13 @@ module.exports = (app)=>{
 
     app.get('/api/getUserReviews/:userId', user.getUserReviews);
 
+
+    app.post("/api/userEmailVerify", user.userEmailVerify);
+    app.post("/api/userForgetPasswordByEmail", user.updateUserPassword);
+
+    app.post("/api/artistEmailVerify", user.artistEmailVerify);
+    app.post("/api/artistForgetPasswordByEmail", user.updateArtistPassword);
+
+
     
 }

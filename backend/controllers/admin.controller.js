@@ -643,9 +643,9 @@ exports.addLike = async (req, res) => {
 exports.getAllCount = async (req, res) => {
   try {
     // Fetching counts from each model
-    const userCount = await user.countDocuments();
+    const userCount = await user.countDocuments({ deleteFlag: false });
     const artCount = await art.countDocuments();
-    const artistCount = await Artist.countDocuments();
+    const artistCount = await Artist.countDocuments({ deleteFlag: false });
     const categoryCount = await category.countDocuments();
 
     // Sending response
@@ -715,10 +715,7 @@ exports.deleteArtist = async (req, res) => {
       return res.status(404).send({ message: "Artist not found", status: 404 });
     }
 
-    await Artist.findOneAndUpdate(
-      { _id: artistId },
-      { $set: { deleteFlag: true } }
-    );
+    await Artist.findOneAndUpdate({ _id: artistId }, { $set: { deleteFlag: true } });
 
     return res
       .status(200)

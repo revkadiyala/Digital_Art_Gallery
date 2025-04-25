@@ -15,7 +15,6 @@ export default function ArtDetail() {
 
   const getArtDetails = async () => {
     const res = await getApihandler(`/getArt/${id}`); // Make an API call to get art details
-
     if (res.message === "Success") {
       setData(res.data);
     }

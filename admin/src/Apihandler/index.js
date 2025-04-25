@@ -3,6 +3,7 @@
 import axios from "axios";
 
 export const serverUrl = "http://localhost:80/api";
+// export const serverUrl = "https://www.digitalartgallery.org/api";
 
 export const formatDate = (dateString) => {
   const date = new Date(dateString);

@@ -16,7 +16,6 @@ export default function BookedArts() {
   }, []);
   const getBookedArts = async () => {
     const res = await getApihandler("/getAllBuyArt");
-
     if (res.status === 200) {
       setBuyArts(res.data);
     }
@@ -30,11 +29,9 @@ export default function BookedArts() {
             <TableRow>
               <TableCell>Art Name</TableCell>
               <TableCell>Artist Name</TableCell>
-
               <TableCell>Price</TableCell>
               <TableCell>Buyer Name</TableCell>
               <TableCell>Card Holder Name</TableCell>
-
               <TableCell>Payment Status</TableCell>
             </TableRow>
           </TableHead>
@@ -43,11 +40,9 @@ export default function BookedArts() {
               <TableRow key={index}>
                 <TableCell>{arts.art_Id?.art_name || "-"}</TableCell>
                 <TableCell>{arts.art_Id?.artist_name || "-"}</TableCell>
-
                 <TableCell>{arts.art_Id?.price || "-"}</TableCell>
                 <TableCell>{arts.user_Id?.user_FullName || "-"}</TableCell>
                 <TableCell>{arts.cardDetails?.cardHolderName || "-"}</TableCell>
-
                 <TableCell>{arts.paymentStatus || "-"}</TableCell>
               </TableRow>
             ))}

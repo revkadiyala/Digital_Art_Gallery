@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import Header from "../../components/Header";
 
 import { Col, Container, Row } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { getApihandler } from "../../Apihandler";
+import { Button } from "@mui/material";
 
 export default function ArtDetail() {
   const { id } = useParams();
@@ -76,6 +77,20 @@ export default function ArtDetail() {
                   <Col md={6}>
                     <h6>{art.description}</h6>
                   </Col>
+                  <div>
+                    <Link to={`/payment/${art._id}`}>
+                      <Button
+                        variant="outlined"
+                        sx={{
+                          border: "2px solid black",
+                          color: "black",
+                          marginTop: "20px",
+                        }}
+                      >
+                        Buy Now
+                      </Button>
+                    </Link>
+                  </div>
                 </Row>
               </Col>
             </>

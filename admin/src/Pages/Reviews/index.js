@@ -16,7 +16,6 @@ export default function Reviews() {
   }, []);
   const getReviews = async () => {
     const res = await getApihandler("/getAllReviews");
-
     if (res.status === 200) {
       setReviews(res.data);
     }
